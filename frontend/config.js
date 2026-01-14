@@ -25,6 +25,6 @@ window.SITE_CONFIG = {
   },
 
   assets: {
-    logo: "./assets/logo.png",
+    logo: "frontend/assets/logo.png",
   },
 };

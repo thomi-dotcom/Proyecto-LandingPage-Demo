@@ -51,7 +51,7 @@ a {
   top: 0;
   z-index: 50;
   padding: 10px 12px;
-  background: rgba(7, 10, 13, 0.58);
+  background: rgba(31, 58, 46, 0.92);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -121,7 +121,7 @@ a {
   max-width: 820px;
   margin: 0 auto;
   padding: 18px 10px;
-  background: rgba(0, 0, 0, 0.384);   /* ← esto lo hace más negro */
+  background: rgba(0, 0, 0, 0.384); /* ← esto lo hace más negro */
   backdrop-filter: blur(2px);
   border-radius: 12px;
   color: #ffffff;
@@ -255,7 +255,7 @@ h1 {
 }
 .imageWrap {
   width: 100%;
-  height: 150px;          /* ajustá a gusto */
+  height: 150px; /* ajustá a gusto */
   overflow: hidden;
   border-radius: 12px;
   margin: 10px 0;
@@ -264,8 +264,8 @@ h1 {
 .dishImage {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
-  object-position: center 40%;/* 🔑 */
+  object-fit: cover;
+  object-position: center 40%; /* 🔑 */
   display: flex;
 }
 .row {
@@ -573,6 +573,11 @@ h1 {
 
 body {
   font-family: var(--font-sans);
+background: linear-gradient(
+  to bottom,
+  rgba(18, 22, 20, 1),
+  rgba(14, 16, 15, 1)
+)
 }
 
 /* Brand (navbar) con onda Paris */
@@ -730,12 +735,20 @@ h1 {
   font-weight: 700;
   font-size: 30px;
   line-height: 1;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
 }
 
 .brand__text em {
   font-style: normal;
   font-weight: 600;
   opacity: 0.75;
+}
+.brand {
+  padding: 6px 14px;
+  border: 1px solid rgba(198, 170, 110, 0.75);
+  border-radius: 6px;
+
 }
 /* Badge (horarios / eventos) dentro de card */
 .titleRow {
