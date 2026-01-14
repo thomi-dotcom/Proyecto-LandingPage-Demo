@@ -56,21 +56,11 @@
   }
 
   function setGlobalWALinks() {
-  const baseMsg = WHATSAPP_DEFAULT_MESSAGE;
-
-  // Top / footer / secciones mantienen mensaje genérico
-  [$waTop, $waMenu, $waHours, $waBottom].forEach((a) => {
-    if (a) a.href = waLink(baseMsg);
-  });
-
-  // Hero: mensaje optimizado para reserva
-  if ($waHero) {
-    const heroMsg =
-      config.whatsapp?.heroMessage ||
-      `Hola! Quisiera reservar en ${BUSINESS_NAME}. ¿Me decís disponibilidad y horarios?`;
-    $waHero.href = waLink(heroMsg);
+    const baseMsg = WHATSAPP_DEFAULT_MESSAGE;
+    [$waTop, $waHero, $waMenu, $waHours, $waBottom].forEach((a) => {
+      if (a) a.href = waLink(baseMsg);
+    });
   }
-}
 
   // ---------- Maps ----------
   function setMapsLink() {

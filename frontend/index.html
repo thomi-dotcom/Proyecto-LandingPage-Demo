@@ -1,232 +1,264 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-<head>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Maison Lúmina | Casa de té en CABA</title>
-  <meta name="description" content="Infusiones artesanales, pastelería de autor y un espacio para disfrutar con calma. Reservas y consultas por WhatsApp." />
+    <title>Maison Lúmina | Casa de té en CABA</title>
+    <meta
+      name="description"
+      content="Infusiones artesanales, pastelería de autor y un espacio para disfrutar con calma. Reservas y consultas por WhatsApp."
+    />
 
-  <meta property="og:title" content="Maison Lúmina" />
-  <meta property="og:description" content="Casa de té en CABA. Reservas y consultas por WhatsApp." />
-  <meta property="og:type" content="website" />
+    <meta property="og:title" content="Maison Lúmina" />
+    <meta
+      property="og:description"
+      content="Casa de té en CABA. Reservas y consultas por WhatsApp."
+    />
+    <meta property="og:type" content="website" />
 
-  <link rel="stylesheet" href="styles.css" />
-</head>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<body>
-  <!-- NAV sticky -->
-  <header class="topbar" id="top">
-    <nav class="nav" aria-label="Navegación principal">
-      <a class="brand" href="#top" aria-label="Ir al inicio">
-        <span class="brand__logoWrap">
-          <img
-            src="./assets/logo.png"
-            alt="Maison Lúmina"
-            onerror="this.style.display='none'; this.parentElement.classList.add('no-logo')"
+  <body>
+    <!-- NAV sticky -->
+    <header class="topbar" id="top">
+      <nav class="nav" aria-label="Navegación principal">
+        <a class="brand" href="#top" aria-label="Ir al inicio">
+          <span class="brand__logoWrap">
+            <img
+              src="./assets/logo.png"
+              alt="Maison Lúmina"
+              onerror="this.style.display='none'; this.parentElement.classList.add('no-logo')"
+            />
+          </span>
+
+          <span class="brand__text"> Maison <em>Lúmina</em> </span>
+        </a>
+
+        <div class="nav__links" role="navigation">
+          <a href="#menu">Carta</a>
+          <a href="#horarios">Horarios</a>
+          <a href="#ubicacion">Ubicación</a>
+          <a href="#historia">Sobre nosotros</a>
+        </div>
+
+        <a
+          class="btn btn--primary"
+          id="waTop"
+          href="#"
+          target="_blank"
+          rel="noopener"
+        >
+          WhatsApp
+        </a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" role="banner" aria-label="Maison Lúmina">
+      <div class="hero__content">
+        <p class="kicker">Casa de té · CABA</p>
+        <h1>Infusiones artesanales y pastelería de autor</h1>
+        <p class="lead">
+          Un espacio cálido para disfrutar con calma. Reservas y consultas por
+          WhatsApp.
+        </p>
+
+        <div class="hero__actions">
+          <a
+            class="btn btn--primary btn--lg"
+            id="waHero"
+            href="#"
+            target="_blank"
+            rel="noopener"
+          >
+            Reservar / Consultar
+          </a>
+          <a class="btn btn--ghost btn--lg" href="#menu"> Ver carta </a>
+        </div>
+
+        <div class="trust" aria-label="Características">
+          <div class="pill">🍵 Blends naturales</div>
+          <div class="pill">🍰 Pastelería</div>
+          <div class="pill">🌿 Ambiente cálido</div>
+        </div>
+      </div>
+
+      <!-- <div class="hero__fade" aria-hidden="true"></div> -->
+    </section>
+
+    <section class="bgShowcase" aria-label="Ambientes Maison Lúmina">
+      <div class="bgShowcase__grid">
+        <div
+          class="bgShowcase__tile bgShowcase__tile--patio"
+          role="img"
+          aria-label="Patio con luces cálidas"
+        ></div>
+        <div
+          class="bgShowcase__tile bgShowcase__tile--interior"
+          role="img"
+          aria-label="Interior con mostrador de pastelería"
+        ></div>
+      </div>
+    </section>
+
+    <main class="container" role="main">
+      <!-- CARTA -->
+      <section class="section reveal" id="menu">
+        <div class="section__head">
+          <div>
+            <h2>Carta</h2>
+            <p class="muted">Buscá por nombre o filtrá por categoría.</p>
+          </div>
+
+          <div class="section__actions">
+            <a
+              class="btn btn--ghost"
+              href="./carta.pdf"
+              target="_blank"
+              rel="noopener"
+            >
+              Ver carta (PDF)
+            </a>
+            <a
+              class="btn btn--primary"
+              id="waMenu"
+              href="#"
+              target="_blank"
+              rel="noopener"
+            >
+              Pedir por WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <div class="menuTools">
+          <input
+            id="menuSearch"
+            class="input"
+            type="search"
+            placeholder="Buscar (ej: limonada, bagel, salmón…)"
+            autocomplete="off"
           />
-        </span>
-
-        <span class="brand__text">
-          Maison <em>Lúmina</em>
-        </span>
-      </a>
-
-      <div class="nav__links" role="navigation">
-        <a href="#menu">Carta</a>
-        <a href="#horarios">Horarios</a>
-        <a href="#ubicacion">Ubicación</a>
-      </div>
-
-      <a class="btn btn--primary" id="waTop" href="#" target="_blank" rel="noopener">
-        WhatsApp
-      </a>
-    </nav>
-  </header>
-
-  <!-- HERO -->
-  <section class="hero" role="banner" aria-label="Maison Lúmina">
-    <div class="hero__content">
-      <p class="kicker">Casa de té · CABA</p>
-      <h1>Infusiones artesanales y pastelería de autor</h1>
-      <p class="lead">
-        Un espacio cálido para disfrutar con calma. Reservas y consultas por WhatsApp.
-      </p>
-
-      <div class="hero__actions">
-  <a
-    class="btn btn--primary btn--lg"
-    id="waHero"
-    href="#"
-    target="_blank"
-    rel="noopener"
-    aria-label="Reservar por WhatsApp"
-  >
-    Reservar por WhatsApp
-  </a>
-
-  <a class="btn btn--ghost btn--lg btn--link" href="#menu" aria-label="Ver la carta">
-    Ver carta
-  </a>
-</div>
-
-      <div class="trust" aria-label="Características">
-        <div class="pill">🍵 Blends naturales</div>
-        <div class="pill">🍰 Pastelería</div>
-        <div class="pill">🌿 Ambiente cálido</div>
-      </div>
-    </div>
-
-    <!-- <div class="hero__fade" aria-hidden="true"></div> -->
-  </section>
-
-  <section class="bgShowcase" aria-label="Ambientes Maison Lúmina">
-  <div class="bgShowcase__grid">
-    <div class="bgShowcase__tile bgShowcase__tile--patio" role="img" aria-label="Patio con luces cálidas"></div>
-    <div class="bgShowcase__tile bgShowcase__tile--interior" role="img" aria-label="Interior con mostrador de pastelería"></div>
-  </div>
-</section>
-
-
-  <main class="container" role="main">
-
-<!-- SOBRE NOSOTROS (EDITORIAL BAND) -->
-<section class="aboutBand reveal" id="sobre-nosotros">
-  <div class="aboutBand__inner">
-    <div class="aboutBand__content">
-      <p class="kicker">Nuestra historia</p>
-      <h2>Sobre nosotros</h2>
-
-      <p>En <strong>Maison Lúmina</strong> creemos en los rituales simples y bien hechos.</p>
-
-      <p>
-        Somos una casa de té pensada como un refugio: un espacio cálido donde el tiempo baja un cambio y cada detalle importa.
-        Trabajamos con infusiones artesanales, pastelería de autor y recetas cuidadas, hechas con ingredientes nobles y sin apuro.
-      </p>
-
-      <p>
-        Nos inspira la idea de compartir, de sentarse a la mesa, de conversar sin mirar el reloj.
-        Por eso cuidamos tanto el ambiente como lo que servimos: luz suave, aromas naturales y una atención cercana.
-      </p>
-
-      <p class="aboutBand__closing">Maison Lúmina es una invitación a disfrutar con calma.</p>
-    </div>
-  </div>
-</section>
-
-
-
-    <!-- CARTA -->
-    <section class="section reveal" id="menu">
-      <div class="section__head">
-        <div>
-          <h2>Carta</h2>
-          <p class="muted">Buscá por nombre o filtrá por categoría.</p>
+          <div class="chips" id="menuChips" aria-label="Categorías"></div>
         </div>
 
-        <div class="section__actions">
-          <a class="btn btn--ghost" href="./carta.pdf" target="_blank" rel="noopener">
-            Ver carta (PDF)
-          </a>
-          <a class="btn btn--primary" id="waMenu" href="#" target="_blank" rel="noopener">
-            Pedir por WhatsApp
-          </a>
-        </div>
-      </div>
+        <div class="menuGrid" id="menuGrid" aria-live="polite"></div>
 
-      <div class="menuTools">
-        <input id="menuSearch" class="input" type="search" placeholder="Buscar (ej: limonada, bagel, salmón…)" autocomplete="off" />
-        <div class="chips" id="menuChips" aria-label="Categorías"></div>
-      </div>
+        <p class="muted footnote">
+          *Precios y disponibilidad pueden variar. Confirmá por WhatsApp.
+        </p>
+      </section>
 
-      <div class="menuGrid" id="menuGrid" aria-live="polite"></div>
-
-      <p class="muted footnote">*Precios y disponibilidad pueden variar. Confirmá por WhatsApp.</p>
-    </section>
-
-    <!-- HORARIOS -->
-    <section class="section reveal" id="horarios">
-      <div class="section__head">
-        <div>
-          <h2>Horarios</h2>
-          <p class="muted">Si estás por venir, escribinos y te confirmamos.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="row">
+      <!-- HORARIOS -->
+      <section class="section reveal" id="horarios">
+        <div class="section__head">
           <div>
-            <p class="label">Atención</p>
-            <p class="value" id="hoursText">Martes a Domingo — 9:00 a 20:00</p>
+            <h2>Horarios</h2>
+            <p class="muted">
+              Si estás por venir, escribinos y te confirmamos.
+            </p>
           </div>
-          <a class="btn btn--primary" id="waHours" href="#" target="_blank" rel="noopener">
-            Consultar ahora
-          </a>
         </div>
-      </div>
-    </section>
 
-    <!-- UBICACIÓN -->
-    <section class="section reveal" id="ubicacion">
-      <div class="section__head">
-        <div>
-          <h2>Ubicación</h2>
-          <p class="muted">CABA, Buenos Aires</p>
+        <div class="card">
+          <div class="row">
+            <div>
+              <p class="label">Atención</p>
+              <p class="value" id="hoursText">
+                Martes a Domingo — 9:00 a 20:00
+              </p>
+            </div>
+            <a
+              class="btn btn--primary"
+              id="waHours"
+              href="#"
+              target="_blank"
+              rel="noopener"
+            >
+              Consultar ahora
+            </a>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="card">
-        <div class="row">
+      <!-- UBICACIÓN -->
+      <section class="section reveal" id="ubicacion">
+        <div class="section__head">
           <div>
-            <p class="label">Cómo llegar</p>
-            <p class="value">Abrí Google Maps y vení directo.</p>
+            <h2>Ubicación</h2>
+            <p class="muted">CABA, Buenos Aires</p>
           </div>
-          <a class="btn btn--ghost" id="mapsBtn" href="#" target="_blank" rel="noopener">
-            Abrir Maps
-          </a>
         </div>
 
-        <!-- MAPA EMBEBIDO -->
-        <div class="mapWrap" aria-label="Mapa de ubicación">
-          <div class="mapSkeleton" id="mapSkeleton"></div>
-          <iframe
-            id="mapsFrame"
-            title="Google Maps"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen
-          ></iframe>
-        </div>
-      </div>
-    </section>
+        <div class="card">
+          <div class="row">
+            <div>
+              <p class="label">Cómo llegar</p>
+              <p class="value">Abrí Google Maps y vení directo.</p>
+            </div>
+            <a
+              class="btn btn--ghost"
+              id="mapsBtn"
+              href="#"
+              target="_blank"
+              rel="noopener"
+            >
+              Abrir Maps
+            </a>
+          </div>
 
-    <!-- CTA FINAL -->
-    <section class="ctaBlock reveal">
-      <h3>¿Reservás o consultás?</h3>
-      <p class="muted">Escribinos por WhatsApp y te respondemos.</p>
-      <a class="btn btn--primary btn--lg" id="waBottom" href="#" target="_blank" rel="noopener">
-        Escribir por WhatsApp
+          <!-- MAPA EMBEBIDO -->
+          <div class="mapWrap" aria-label="Mapa de ubicación">
+            <div class="mapSkeleton" id="mapSkeleton"></div>
+            <iframe
+              id="mapsFrame"
+              title="Google Maps"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA FINAL -->
+      <section class="ctaBlock reveal">
+        <h3>¿Reservás o consultás?</h3>
+        <p class="muted">Escribinos por WhatsApp y te respondemos.</p>
+        <a
+          class="btn btn--primary btn--lg"
+          id="waBottom"
+          href="#"
+          target="_blank"
+          rel="noopener"
+        >
+          Escribir por WhatsApp
+        </a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p class="muted">© <span id="year"></span> Maison Lúmina</p>
+      <a
+        class="btn btn--ghost"
+        href="./admin.html"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Admin
       </a>
-    </section>
-  </main>
+    </footer>
 
-  <footer class="footer">
-    <p class="muted">© <span id="year"></span> Maison Lúmina</p>
-    <a
-  class="btn btn--ghost"
-  href="./admin.html"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Admin
-</a>
-  </footer>
-
-  <script src="config.js"></script>
-  <script defer src="app.js"></script>
-</body>
+    <script src="config.js"></script>
+    <script defer src="app.js"></script>
+  </body>
 </html>
