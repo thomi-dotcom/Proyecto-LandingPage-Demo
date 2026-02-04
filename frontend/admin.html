@@ -6,34 +6,48 @@
   <title>Admin | Maison Lúmina</title>
 
   <style>
-    :root{
-      --bg:#fbfaf7;
-      --card:#ffffff;
-      --text:#1f1f1d;
-      --muted:rgba(31,31,29,.65);
-      --border:rgba(31,31,29,.10);
+    :root {
+      /* Tema Oscuro (Default) */
+      --bg: #0b0f12;
+      --card: #141a1f;
+      --text: #f6f7f8;
+      --muted: rgba(255, 255, 255, 0.6);
+      --border: rgba(255, 255, 255, 0.1);
+      --toolbar-bg: rgba(20, 26, 31, 0.85);
+      
+      --olive: #3c8c64;
+      --olive-2: #2f6f4e;
+      --danger: #ff5252;
+      --warn: #ffb74d;
 
-      --olive:#2e5b3b;
-      --olive-2:#244a31;
+      --radius: 18px;
+      --shadow-sm: 0 10px 26px rgba(0,0,0,0.3);
+      --focus: rgba(60, 140, 100, 0.25);
+    }
 
-      --danger:#a12020;
-      --warn:#b07a00;
-
-      --radius:18px;
-      --shadow-sm:0 10px 26px rgba(22,18,12,.07);
-      --shadow-md:0 18px 46px rgba(22,18,12,.10);
-      --focus: rgba(46,91,59,.18);
+    /* Clase para Tema Claro */
+    [data-theme="light"] {
+      --bg: #fbfaf7;
+      --card: #ffffff;
+      --text: #1f1f1d;
+      --muted: rgba(31,31,29,.65);
+      --border: rgba(31,31,29,.10);
+      --toolbar-bg: rgba(251,250,247,.86);
+      --olive: #2e5b3b;
+      --olive-2: #244a31;
+      --danger: #a12020;
+      --warn: #b07a00;
+      --shadow-sm: 0 10px 26px rgba(22,18,12,.07);
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(900px 600px at 18% -10%, rgba(46,91,59,.10), transparent 60%),
-        var(--bg);
-      color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     body.is-locked{ overflow:hidden; }
@@ -44,34 +58,25 @@
       padding: 18px 18px 64px;
     }
 
-    /* Top header */
     .header{
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
       gap:14px;
       flex-wrap:wrap;
       margin: 6px 0 14px;
     }
-    h1{
-      margin:0 0 6px;
-      font-size: 26px;
-      letter-spacing:.01em;
-    }
-    .muted{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.35;
-    }
+    
+    h1{ margin:0; font-size: 26px; letter-spacing:.01em; }
 
-    /* Toolbar (sticky) */
+    /* Toolbar */
     .toolbar{
       position: sticky;
       top: 0;
       z-index: 10;
-      background: rgba(251,250,247,.86);
+      background: var(--toolbar-bg);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(31,31,29,.08);
+      border: 1px solid var(--border);
       box-shadow: var(--shadow-sm);
       border-radius: var(--radius);
       padding: 12px;
@@ -84,119 +89,67 @@
       align-items:center;
     }
 
-    /* Search */
     .search{
       display:flex;
       gap:10px;
       align-items:center;
-      background: #fff;
-      border:1px solid rgba(31,31,29,.12);
+      background: rgba(255,255,255,0.05);
+      border:1px solid var(--border);
       border-radius: 14px;
       padding: 10px 12px;
     }
+    [data-theme="light"] .search { background: #fff; }
+
     .search input{
       border:0;
       outline:none;
       flex:1;
       font-size:14px;
       background: transparent;
+      color: inherit;
     }
+
     .pill{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding: 8px 10px;
-      border:1px solid rgba(31,31,29,.12);
+      padding: 8px 12px;
+      border:1px solid var(--border);
       border-radius: 999px;
-      background:#fff;
+      background: rgba(255,255,255,0.03);
       font-size:13px;
       color: var(--muted);
-      user-select:none;
     }
+    [data-theme="light"] .pill { background: #fff; }
     .pill strong{ color: var(--text); font-weight:700; }
 
     /* Buttons */
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
     .btn{
       padding:10px 14px;
       border-radius:14px;
-      border:1px solid rgba(31,31,29,.12);
-      background:#fff;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
       cursor:pointer;
       font-weight:700;
       font-size:14px;
-      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
-      white-space:nowrap;
+      transition: all .15s ease;
+      white-space: nowrap;
     }
-    .btn:hover{
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-sm);
-    }
-    .btn:focus-visible{
-      outline:none;
-      box-shadow: 0 0 0 4px var(--focus);
-      border-color: rgba(46,91,59,.35);
-    }
+    [data-theme="light"] .btn { background: #fff; }
+
+    .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
     .btnPrimary{
       background: linear-gradient(180deg, var(--olive), var(--olive-2));
       color:#fff;
-      border-color: rgba(46,91,59,.35);
-      box-shadow: 0 14px 30px rgba(46,91,59,.22);
+      border: none;
     }
-    .btnPrimary:hover{
-      box-shadow: 0 18px 40px rgba(46,91,59,.28);
-    }
-    .btnGhost{
-      background: transparent;
-      border-color: rgba(31,31,29,.12);
-    }
-
-    /* Status + warnings */
-    .status{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
-      background: var(--card);
-      border:1px solid rgba(31,31,29,.10);
-      border-radius: var(--radius);
-      padding: 12px 14px;
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 12px;
-    }
-    .statusLeft{
-      display:flex;
-      flex-direction:column;
-      gap: 4px;
-      min-width: 220px;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      border: 1px solid rgba(31,31,29,.12);
-      background: #fff;
-      width: fit-content;
-    }
-    .badge.ok{ color: var(--olive); border-color: rgba(46,91,59,.25); background: rgba(46,91,59,.06); }
-    .badge.warn{ color: var(--warn); border-color: rgba(176,122,0,.25); background: rgba(176,122,0,.08); }
-    .badge.err{ color: var(--danger); border-color: rgba(161,32,32,.25); background: rgba(161,32,32,.08); }
 
     /* List */
     .list{
       background: var(--card);
-      border:1px solid rgba(31,31,29,.10);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow-sm);
       overflow:hidden;
@@ -207,12 +160,11 @@
       grid-template-columns: 1.05fr 1.4fr .8fr;
       gap: 10px;
       padding: 12px 14px;
-      border-bottom: 1px solid rgba(31,31,29,.08);
+      border-bottom: 1px solid var(--border);
       color: var(--muted);
-      font-size: 12px;
-      letter-spacing: .12em;
+      font-size: 11px;
       text-transform: uppercase;
-      background: rgba(31,31,29,.02);
+      background: rgba(255,255,255,0.02);
     }
 
     .itemRow{
@@ -220,168 +172,89 @@
       grid-template-columns: 1.05fr 1.4fr .8fr;
       gap: 10px;
       padding: 12px 14px;
-      border-bottom:1px solid rgba(31,31,29,.06);
+      border-bottom: 1px solid var(--border);
       align-items:center;
-      transition: background .12s ease;
     }
-    .itemRow:hover{ background: rgba(46,91,59,.04); }
+    .itemRow:hover{ background: rgba(60, 140, 100, 0.08); }
 
-    .sec{
-      font-weight:800;
-      font-size: 13px;
-      color: rgba(31,31,29,.78);
-    }
-    .name{
-      font-weight:700;
-      font-size:14px;
-    }
-    .sub{
-      display:block;
-      font-weight:600;
-      font-size:12px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
+    .sec{ font-weight:800; font-size: 13px; opacity: 0.8; }
+    .name{ font-weight:700; font-size:14px; }
+    .sub{ display:block; font-size:12px; color: var(--muted); margin-top: 2px; }
 
-    /* Price input (safe + clear) */
-    .priceWrap{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap: 8px;
-    }
-    .money{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      width: 100%;
-      max-width: 240px;
-      justify-content:flex-end;
-    }
-    .prefix{
-      color: var(--muted);
-      font-weight:800;
-      padding: 0 6px 0 0;
-    }
     input[type="number"]{
-      width: 160px;
-      max-width: 100%;
-      padding: 10px 10px;
+      width: 140px;
+      padding: 10px;
       border-radius: 12px;
-      border: 1px solid rgba(31,31,29,.18);
+      border: 1px solid var(--border);
       font-size: 14px;
       text-align:right;
-      background: #fff;
-      transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
     }
-    input[type="number"]:focus{
-      outline:none;
-      border-color: rgba(46,91,59,.45);
-      box-shadow: 0 0 0 4px rgba(46,91,59,.18);
-    }
+    [data-theme="light"] input[type="number"] { background: #fff; }
 
     .changed{
-      background: rgba(46,91,59,.06);
-      border-color: rgba(46,91,59,.35) !important;
-      box-shadow: 0 0 0 4px rgba(46,91,59,.10);
+      background: rgba(60, 140, 100, 0.15) !important;
+      border-color: var(--olive) !important;
     }
 
-    .hint{
-      margin-top: 12px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    code{
-      background: rgba(31,31,29,.06);
-      padding:3px 6px;
-      border-radius:8px;
-      font-size:12px;
-    }
-
-    /* ---- PIN overlay ---- */
+    /* PIN overlay */
     .pinOverlay{
       position: fixed;
       inset: 0;
-      background: rgba(251,250,247,.92);
+      background: rgba(7,10,13,0.96);
       backdrop-filter: blur(10px);
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 18px;
       z-index: 9999;
     }
     .pinCard{
-      width: min(520px, 100%);
-      background: #fff;
-      border: 1px solid rgba(31,31,29,.10);
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 18px 46px rgba(22,18,12,.12);
+      width: min(400px, 90%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
     }
-    .pinTitle{ margin: 0 0 6px; font-size: 22px; }
-    .pinRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
-    .pinInput{
-      flex: 1 1 220px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(31,31,29,.18);
-      font-size: 16px;
+
+    /* Scrollbar Dark */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 99px;
+      border: 2px solid var(--bg);
     }
-    .pinInput:focus{
-      outline:none;
-      border-color: rgba(46,91,59,.45);
-      box-shadow: 0 0 0 4px rgba(46,91,59,.18);
-    }
-    .pinError{
-      margin-top: 10px;
-      color: var(--danger);
-      font-size: 13px;
-      display:none;
-      font-weight: 700;
-    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
 
     /* Mobile */
     @media (max-width: 860px){
       .toolbarGrid{ grid-template-columns: 1fr; }
-      .row{ justify-content:flex-start; }
-
       .listHead{ display:none; }
-      .itemRow{
-        grid-template-columns: 1fr;
-        gap: 6px;
-        align-items:flex-start;
-      }
-      .priceWrap{ justify-content:flex-start; }
-      .money{ justify-content:flex-start; max-width: 100%; }
-      input[type="number"]{ width: 180px; }
+      .itemRow{ grid-template-columns: 1fr; }
+    }
+
+    /* Print */
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      .topbar, .header .btn, .toolbar, .status, .pinOverlay { display: none !important; }
+      .wrap { padding: 0; max-width: 100%; }
+      .list { box-shadow: none; border: none; }
+      .itemRow { border-bottom: 1px dotted #ccc; page-break-inside: avoid; }
+      input[type="number"] { border: none; background: transparent; text-align: right; font-weight: bold; color: #000; }
     }
   </style>
 </head>
 
-<body class="is-locked">
-  <!-- PIN overlay -->
-  <div class="pinOverlay" id="pinOverlay" aria-label="Acceso protegido">
+<body>
+  <div class="pinOverlay" id="pinOverlay">
     <div class="pinCard">
-      <h2 class="pinTitle">Acceso Admin</h2>
-      <p class="muted" style="margin:0;">Ingresá el PIN para editar precios.</p>
-
-      <div class="pinRow">
-        <input
-          class="pinInput"
-          id="pinInput"
-          type="password"
-          inputmode="numeric"
-          placeholder="PIN (4–6 dígitos)"
-          autocomplete="one-time-code"
-        />
-        <button class="btn btnPrimary" id="pinBtn" type="button">Entrar</button>
-      </div>
-
-      <div class="pinError" id="pinError">PIN incorrecto.</div>
-      <p class="muted" style="margin:12px 0 0; font-size:12px;">
-        Nota: esto es demo (sin backend). No es seguridad real.
-      </p>
+      <h2 style="margin-top:0">Acceso Admin</h2>
+      <p class="muted">Maison Lúmina — Panel de Precios</p>
+      <input class="btn" style="width:100%; margin-top:10px; text-align:center; font-size:18px" id="pinInput" type="password" placeholder="PIN" />
+      <button class="btn btnPrimary" id="pinBtn" style="width:100%; margin-top:10px; padding:15px">Entrar</button>
+      <div id="pinError" style="color:var(--danger); margin-top:10px; display:none">PIN incorrecto</div>
     </div>
   </div>
 
@@ -389,49 +262,37 @@
     <div class="header">
       <div>
         <h1>Admin — Precios</h1>
-        <div class="muted">Buscá un producto, editá el precio y guardá. Los cambios quedan en este navegador (demo).</div>
+        <div class="muted">Gestión de menú Maison Lúmina.</div>
       </div>
-      <div class="pill" id="pillInfo">
-        <span>Modificados:</span> <strong id="changedCount">0</strong>
-        <span>·</span>
-        <span>Total:</span> <strong id="totalCount">0</strong>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn" onclick="window.location.href='./index.html'">← Volver</button>
+        <button class="btn" id="themeToggle">🌓 Modo</button>
+        <div class="pill">
+          <span>Modif:</span> <strong id="changedCount">0</strong>
+        </div>
       </div>
     </div>
 
-    <div class="toolbar" role="region" aria-label="Herramientas">
+    <div class="toolbar">
       <div class="toolbarGrid">
-        <div class="search" aria-label="Buscar productos">
-          <span style="font-weight:900;color:rgba(31,31,29,.55);">🔎</span>
-          <input id="q" type="text" placeholder="Buscar por producto o sección (ej: milanesa, bebidas…)" />
-          <button class="btn btnGhost" id="btnClear" type="button" title="Limpiar">Limpiar</button>
+        <div class="search">
+          <span>🔎</span>
+          <input id="q" type="text" placeholder="Buscar producto o sección..." />
         </div>
 
         <label class="pill" style="cursor:pointer;">
-          <input id="onlyChanged" type="checkbox" style="accent-color: var(--olive); transform: translateY(1px);" />
+          <input id="onlyChanged" type="checkbox" style="accent-color: var(--olive);" />
           <span>Ver solo modificados</span>
         </label>
 
-        <div class="row">
-          <button class="btn" id="btnReset" type="button">Reset</button>
-          <button class="btn" id="btnExport" type="button">Exportar JSON</button>
-          <button class="btn btnPrimary" id="btnSave" type="button">Guardar</button>
+        <div style="display:flex; gap:10px">
+          <button class="btn" id="btnExport">Exportar JSON</button>
+          <button class="btn btnPrimary" id="btnSave">Guardar</button>
         </div>
       </div>
     </div>
 
-    <div class="status" id="statusBox">
-      <div class="statusLeft">
-        <div class="badge warn" id="statusBadge">Cargando…</div>
-        <div class="muted" id="statusText">Preparando datos.</div>
-      </div>
-
-      <div class="muted" style="max-width:560px;">
-        Tip: para que todos vean los cambios, exportá y reemplazá
-        <code>./data/menu.json</code> en tu deploy.
-      </div>
-    </div>
-
-    <div class="list" aria-label="Listado de productos">
+    <div class="list">
       <div class="listHead">
         <div>Sección</div>
         <div>Producto</div>
@@ -439,284 +300,189 @@
       </div>
       <div id="listBody"></div>
     </div>
-
-    <p class="hint">
-      Recomendación de negocio: si esto va a producción, no uses PIN en frontend.
-      Lo mínimo es login + permisos en backend.
-    </p>
   </div>
 
+  <script src="config.js"></script>
+
   <script>
-    (() => {
-      // ---- PIN (demo, sin backend) ----
-      const ADMIN_PIN = "1433"; // <-- cambiá el PIN acá
+    // ---- LÓGICA DE TEMA ----
+    const themeBtn = document.getElementById('themeToggle');
+    themeBtn.onclick = () => {
+      const isLight = document.body.getAttribute('data-theme') === 'light';
+      document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    };
 
-      const overlay = document.getElementById("pinOverlay");
-      const input = document.getElementById("pinInput");
-      const btn = document.getElementById("pinBtn");
-      const err = document.getElementById("pinError");
-
-      function setError(on){ err.style.display = on ? "block" : "none"; }
-
-      function unlock(){
-        setError(false);
+    // ---- PIN ----
+    const ADMIN_PIN = "1433"; 
+    const overlay = document.getElementById("pinOverlay");
+    const pinInput = document.getElementById("pinInput");
+    const pinBtn = document.getElementById("pinBtn");
+    
+    function checkPin(){
+      if (pinInput.value === ADMIN_PIN) {
         overlay.style.display = "none";
         document.body.classList.remove("is-locked");
+      } else {
+        document.getElementById("pinError").style.display = "block";
+        pinInput.value = "";
       }
+    }
+    pinBtn.onclick = checkPin;
+    pinInput.onkeydown = (e) => { if(e.key === 'Enter') checkPin() };
 
-      function check(){
-        const v = String(input.value || "").trim();
-        if (v === ADMIN_PIN) unlock();
-        else{
-          setError(true);
-          input.focus();
-          input.value = "";
-        }
-      }
-
-      btn.addEventListener("click", check);
-      input.addEventListener("keydown", (e) => { if (e.key === "Enter") check(); });
-      input.addEventListener("input", () => setError(false));
-      input.focus();
-    })();
-  </script>
-
-  <script>
+    // ---- GESTIÓN DE DATOS (Nube) ----
     (async () => {
-      const $ = (s) => document.querySelector(s);
-
       const STORAGE_KEY = "menu_override_v1";
-
-      const statusBadge = $("#statusBadge");
-      const statusText  = $("#statusText");
-
-      const listBody = $("#listBody");
-      const q = $("#q");
-      const btnClear = $("#btnClear");
-      const onlyChanged = $("#onlyChanged");
-
-      const changedCountEl = $("#changedCount");
-      const totalCountEl   = $("#totalCount");
+      const listBody = document.getElementById("listBody");
+      const q = document.getElementById("q");
+      const onlyChanged = document.getElementById("onlyChanged");
+      const changedCountEl = document.getElementById("changedCount");
+      const btnSave = document.getElementById("btnSave");
 
       let menu = null;
-      let flat = [];                 // items "aplanados" para render + filtros
-      let dirty = new Set();         // ids modificados
-      let originalPrices = new Map();// id -> precio original (para comparar)
+      let flat = [];
+      let dirty = new Set();
+      let originalPrices = new Map();
 
-      function setStatus(type, title, desc){
-        statusBadge.className = "badge " + type;
-        statusBadge.textContent = title;
-        statusText.textContent = desc || "";
-      }
-
-      function escapeId(s){
-        return String(s).replace(/\s+/g,"_").replace(/[^\w\-]/g,"").toLowerCase();
-      }
-
-      async function loadBaseMenu(){
-        const res = await fetch("./data/menu.json", { cache: "no-store" });
-        if(!res.ok) throw new Error("No pude cargar ./data/menu.json");
+      // Carga de menú (NUBE con fallback)
+      async function loadMenu(){
+        try {
+          // Intentamos nube
+          const config = window.SITE_CONFIG;
+          if(config && config.api && config.api.binId){
+            const { binId, apiKey } = config.api;
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+              headers: { 'X-Master-Key': apiKey }
+            });
+            if(res.ok){
+              const json = await res.json();
+              return json.record;
+            }
+          }
+        } catch(e) { console.warn("Fallo nube en admin, usando local", e); }
+        
+        // Fallback local
+        const local = localStorage.getItem(STORAGE_KEY);
+        if(local) return JSON.parse(local);
+        const res = await fetch("./data/menu.json");
         return res.json();
       }
 
-      function loadOverride(){
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw) return null;
-        try { return JSON.parse(raw); } catch { return null; }
-      }
-
-      function downloadJSON(obj, filename){
-        const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      }
-
-      function normalizeMenu(menuObj){
-        // Aplana para poder filtrar/buscar más fácil
+      function normalize(menuObj){
         const out = [];
-        for(const section of (menuObj.sections || [])){
-          const secTitle = section.title ?? "Sin sección";
-          for(const item of (section.items || [])){
-            const id = escapeId(secTitle + "::" + (item.name ?? "item"));
-            const price = (typeof item.price === "number") ? item.price : 0;
-
-            out.push({
-              id,
-              section,
-              item,
-              secTitle,
-              name: item.name ?? "(Sin nombre)",
-              price
-            });
-          }
-        }
+        if(!menuObj.sections) return out;
+        menuObj.sections.forEach(sec => {
+          sec.items.forEach(item => {
+            const id = `${sec.id}-${item.name}`.replace(/\s+/g, '-').toLowerCase();
+            out.push({ id, secTitle: sec.title, item, name: item.name });
+            originalPrices.set(id, item.price);
+          });
+        });
         return out;
       }
 
+      // ESTA es la función que te daba error: ahora está segura dentro del bloque
       function updateCounters(){
-        changedCountEl.textContent = String(dirty.size);
-        totalCountEl.textContent = String(flat.length);
-
-        // Estado visual de "cambios sin guardar"
-        if(dirty.size > 0){
-          setStatus("warn", "Cambios sin guardar", "Tenés precios modificados. Tocá Guardar para persistir en este navegador.");
-        } else {
-          setStatus("ok", "Listo", "No hay cambios pendientes.");
-        }
-      }
-
-      function matchesFilter(row, query){
-        const qq = (query || "").trim().toLowerCase();
-        if(!qq) return true;
-        return (
-          row.name.toLowerCase().includes(qq) ||
-          row.secTitle.toLowerCase().includes(qq)
-        );
+        changedCountEl.textContent = dirty.size;
       }
 
       function render(){
-        const query = q.value;
-        const onlyMod = onlyChanged.checked;
-
         listBody.innerHTML = "";
-
-        let shown = 0;
-
-        for(const r of flat){
-          const isDirty = dirty.has(r.id);
-
-          if(onlyMod && !isDirty) continue;
-          if(!matchesFilter(r, query)) continue;
+        const query = q.value.toLowerCase();
+        
+        flat.forEach(r => {
+          if (onlyChanged.checked && !dirty.has(r.id)) return;
+          if (query && !r.name.toLowerCase().includes(query) && !r.secTitle.toLowerCase().includes(query)) return;
 
           const row = document.createElement("div");
           row.className = "itemRow";
-          row.dataset.id = r.id;
+          if(dirty.has(r.id)) row.classList.add("changed");
 
-          const colS = document.createElement("div");
-          colS.innerHTML = `<span class="sec">${r.secTitle}</span>`;
+          row.innerHTML = `
+            <div class="sec">${r.secTitle}</div>
+            <div class="name">${r.name}<span class="sub">ARS</span></div>
+            <div style="text-align:right">
+              <input type="number" value="${r.item.price}" data-id="${r.id}">
+            </div>
+          `;
 
-          const colN = document.createElement("div");
-          colN.innerHTML = `<span class="name">${r.name}</span><span class="sub">Editá solo el precio. (ARS)</span>`;
+          const inp = row.querySelector('input');
+          inp.oninput = () => {
+            const val = Number(inp.value);
+            r.item.price = val;
+            
+            // Lógica de "sucio" (modificado)
+            if(val !== originalPrices.get(r.id)) dirty.add(r.id);
+            else dirty.delete(r.id);
+            
+            updateCounters(); // Ahora sí la encuentra :)
 
-          const colP = document.createElement("div");
-          colP.className = "priceWrap";
+            if(val !== originalPrices.get(r.id)) row.classList.add("changed");
+            else row.classList.remove("changed");
+          };
 
-          const money = document.createElement("div");
-          money.className = "money";
-
-          const prefix = document.createElement("span");
-          prefix.className = "prefix";
-          prefix.textContent = "$";
-
-          const inp = document.createElement("input");
-          inp.type = "number";
-          inp.min = "0";
-          inp.step = "100"; // ajustalo si querés (ej: 10)
-          inp.value = (typeof r.item.price === "number") ? r.item.price : 0;
-
-          if(isDirty) inp.classList.add("changed");
-
-          inp.addEventListener("input", () => {
-            const v = Number(inp.value);
-            if(!Number.isFinite(v) || v < 0) return;
-
-            const base = originalPrices.get(r.id) ?? 0;
-
-            // actualiza el JSON real
-            r.item.price = v;
-
-            // marca dirty si cambió respecto del base
-            if(v !== base){
-              dirty.add(r.id);
-              inp.classList.add("changed");
-            } else {
-              dirty.delete(r.id);
-              inp.classList.remove("changed");
-            }
-
-            updateCounters();
-          });
-
-          money.append(prefix, inp);
-          colP.appendChild(money);
-
-          row.append(colS, colN, colP);
           listBody.appendChild(row);
-          shown++;
-        }
-
-        if(shown === 0){
-          const empty = document.createElement("div");
-          empty.style.padding = "18px 14px";
-          empty.className = "muted";
-          empty.textContent = "No hay resultados con esos filtros.";
-          listBody.appendChild(empty);
-        }
+        });
       }
 
-      // Acciones
-      $("#btnSave").addEventListener("click", () => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(menu));
-        dirty.clear();
-        updateCounters();
-        render();
-        setStatus("ok", "Guardado ✅", "Se guardó en este navegador. Recargá el index para ver los cambios.");
-      });
+      menu = await loadMenu();
+      flat = normalize(menu);
+      render();
 
-      $("#btnReset").addEventListener("click", async () => {
-        localStorage.removeItem(STORAGE_KEY);
-        menu = await loadBaseMenu();
-        flat = normalizeMenu(menu);
+      q.oninput = render;
+      onlyChanged.onchange = render;
 
-        dirty.clear();
-        originalPrices.clear();
-        for(const r of flat){
-          originalPrices.set(r.id, (typeof r.item.price === "number") ? r.item.price : 0);
+      // BOTÓN GUARDAR EN NUBE
+      btnSave.onclick = async () => {
+        try {
+          btnSave.textContent = "Guardando...";
+          btnSave.disabled = true;
+
+          const config = window.SITE_CONFIG;
+          if (!config || !config.api) throw new Error("Faltan claves API en config.js");
+          const { binId, apiKey } = config.api;
+
+          const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Master-Key": apiKey
+            },
+            body: JSON.stringify(menu)
+          });
+
+          if (!res.ok) throw new Error("Error al guardar en la nube.");
+
+          // Limpieza
+          dirty.clear();
+          localStorage.removeItem(STORAGE_KEY);
+          updateCounters(); // Funciona perfecto aquí también
+          
+          alert("¡Guardado en la nube! ☁️\nLos cambios ya son visibles.");
+          
+        } catch (e) {
+          alert("Error: " + e.message);
+        } finally {
+          btnSave.textContent = "Guardar";
+          btnSave.disabled = false;
         }
+      };
 
-        updateCounters();
-        render();
-        setStatus("ok", "Reset ✅", "Volviste al JSON original.");
-      });
-
-      $("#btnExport").addEventListener("click", () => downloadJSON(menu, "menu.json"));
-
-      btnClear.addEventListener("click", () => { q.value = ""; render(); q.focus(); });
-      q.addEventListener("input", render);
-      onlyChanged.addEventListener("change", render);
-
-      // Protección: avisar si intenta cerrar con cambios
+      document.getElementById("btnExport").onclick = () => {
+        const blob = new Blob([JSON.stringify(menu, null, 2)], {type: "application/json"});
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "menu.json";
+        a.click();
+      };
+      
+      // Protección al salir
       window.addEventListener("beforeunload", (e) => {
         if(dirty.size > 0){
           e.preventDefault();
           e.returnValue = "";
         }
       });
-
-      // Init
-      try{
-        setStatus("warn", "Cargando…", "Leyendo menú.");
-        menu = loadOverride() || await loadBaseMenu();
-        flat = normalizeMenu(menu);
-
-        // snapshot de precios para detectar cambios
-        originalPrices.clear();
-        for(const r of flat){
-          originalPrices.set(r.id, (typeof r.item.price === "number") ? r.item.price : 0);
-        }
-
-        updateCounters();
-        render();
-        setStatus("ok", "Listo", "Buscá un producto y editá el precio.");
-      }catch(e){
-        setStatus("err", "Error", (e && e.message) ? e.message : String(e));
-      }
     })();
   </script>
 </body>

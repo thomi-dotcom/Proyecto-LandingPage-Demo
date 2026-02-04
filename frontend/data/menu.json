@@ -16,7 +16,7 @@
       "items": [
         {
           "name": "Lúmina Clásico",
-          "price": 9800,
+          "price": 12000,
           "desc": "Infusión a elección, jugo cítrico, 2 viennoiseries (croissant o pain au chocolat).",
           "image": "./assets/maison_tea.jpg",
           "recommended": true
@@ -24,13 +24,15 @@
         {
           "name": "Rivoli Light",
           "price": 11200,
-          "desc": "Infusión, tostadas de campo, queso crema, mermelada artesanal y frutas frescas."
+          "desc": "Infusión, tostadas de campo, queso crema, mermelada artesanal y frutas frescas.",
+          "image": "./assets/rivoli.jpg"
         },
         {
           "name": "Montmartre",
           "price": 17900,
           "desc": "Infusión, french toast brioche, crema, frutas de estación y coulis.",
-          "recommended": true
+          "recommended": true,
+          "image": "./assets/monmarte.jpg"
         },
         {
           "name": "Énergie Bowl",
@@ -65,14 +67,23 @@
           "price": 16800,
           "note": "Opción salmón ahumado: $25900"
         },
-        { "name": "Smash burger Maison", "price": 25800 },
+        {
+          "name": "Smash burger Maison",
+          "price": 25800
+        },
         {
           "name": "Ravioles de ricotta & limón",
           "price": 22900,
           "recommended": true
         },
-        { "name": "Ñoquis de papa & manteca", "price": 19800 },
-        { "name": "Salmón grillado", "price": 31900 }
+        {
+          "name": "Ñoquis de papa & manteca",
+          "price": 19800
+        },
+        {
+          "name": "Salmón grillado",
+          "price": 31900
+        }
       ]
     },
     {
@@ -118,28 +129,58 @@
           "note": "Opción salmón ahumado: $28900",
           "recommended": true
         },
-        { "name": "Tibia de garbanzos", "price": 20900 },
-        { "name": "Verde & cítricos", "price": 18900 }
+        {
+          "name": "Tibia de garbanzos",
+          "price": 20900
+        },
+        {
+          "name": "Verde & cítricos",
+          "price": 18900
+        }
       ]
     },
     {
       "id": "infantil",
       "title": "Menú Infantil",
       "items": [
-        { "name": "Milanesa con papas", "price": 18900 },
-        { "name": "Pasta con queso", "price": 15900 },
-        { "name": "Nuggets con papas", "price": 17900 }
+        {
+          "name": "Milanesa con papas",
+          "price": 18900
+        },
+        {
+          "name": "Pasta con queso",
+          "price": 15900
+        },
+        {
+          "name": "Nuggets con papas",
+          "price": 17900
+        }
       ]
     },
     {
       "id": "cafeteria",
       "title": "Cafetería",
       "items": [
-        { "name": "Espresso", "price": 4200 },
-        { "name": "Americano", "price": 4500 },
-        { "name": "Cortado", "price": 4600 },
-        { "name": "Café con leche", "price": 5600 },
-        { "name": "Flat White", "price": 6400 },
+        {
+          "name": "Espresso",
+          "price": 4200
+        },
+        {
+          "name": "Americano",
+          "price": 4500
+        },
+        {
+          "name": "Cortado",
+          "price": 4600
+        },
+        {
+          "name": "Café con leche",
+          "price": 5600
+        },
+        {
+          "name": "Flat White",
+          "price": 6400
+        },
         {
           "name": "Chocolatada",
           "price": 6900,
@@ -209,8 +250,14 @@
           "price": 9200,
           "desc": "Naranja, zanahoria y jengibre."
         },
-        { "name": "Exprimido de naranja", "price": 6500 },
-        { "name": "Limonada clásica", "price": 6900 },
+        {
+          "name": "Exprimido de naranja",
+          "price": 6500
+        },
+        {
+          "name": "Limonada clásica",
+          "price": 6900
+        },
         {
           "name": "Limonada frutos rojos",
           "price": 7200,
@@ -218,7 +265,6 @@
         }
       ]
     },
-
     {
       "id": "pasteleria",
       "title": "Pastelería",
@@ -228,11 +274,26 @@
           "price": 8900,
           "desc": "Tarta de limón con merengue suave."
         },
-        { "name": "Cheesecake Vanilla", "price": 9200 },
-        { "name": "Brownie Noir", "price": 7600 },
-        { "name": "Carrot Cake", "price": 9800 },
-        { "name": "Chocotorta Maison", "price": 9900 },
-        { "name": "Éclair de Chocolate", "price": 8300 },
+        {
+          "name": "Cheesecake Vanilla",
+          "price": 9200
+        },
+        {
+          "name": "Brownie Noir",
+          "price": 7600
+        },
+        {
+          "name": "Carrot Cake",
+          "price": 9800
+        },
+        {
+          "name": "Chocotorta Maison",
+          "price": 9900
+        },
+        {
+          "name": "Éclair de Chocolate",
+          "price": 8300
+        },
         {
           "name": "Degustación mini pâtisserie",
           "price": 21900,
@@ -245,12 +306,30 @@
       "id": "del-horno",
       "title": "Del Horno",
       "items": [
-        { "name": "Croissant", "price": 2600 },
-        { "name": "Pain au chocolat", "price": 3200 },
-        { "name": "Scon dulce", "price": 3600 },
-        { "name": "Scon de queso", "price": 4500 },
-        { "name": "Cookies", "price": 3600 },
-        { "name": "Budín cítrico", "price": 5800 }
+        {
+          "name": "Croissant",
+          "price": 2600
+        },
+        {
+          "name": "Pain au chocolat",
+          "price": 3200
+        },
+        {
+          "name": "Scon dulce",
+          "price": 3600
+        },
+        {
+          "name": "Scon de queso",
+          "price": 4500
+        },
+        {
+          "name": "Cookies",
+          "price": 3600
+        },
+        {
+          "name": "Budín cítrico",
+          "price": 5800
+        }
       ]
     },
     {
@@ -274,19 +353,37 @@
           "note": "Ideal para compartir (2 personas). Incluye: 2 infusiones, 2 jugos cítricos, huevos revueltos, tostadas de campo, croissant, scons dulce, waffle de crema y frutos rojos, frutas frescas y mini pâtisserie.",
           "recommended": true
         },
-        { "name": "Waffle dulce de leche & cacao", "price": 11200 },
-        { "name": "Waffle crema & frutos rojos", "price": 10400 },
-        { "name": "Waffle jamón & queso", "price": 9800 }
+        {
+          "name": "Waffle dulce de leche & cacao",
+          "price": 11200
+        },
+        {
+          "name": "Waffle crema & frutos rojos",
+          "price": 10400
+        },
+        {
+          "name": "Waffle jamón & queso",
+          "price": 9800
+        }
       ]
     },
-
     {
       "id": "postres",
       "title": "Postres",
       "items": [
-        { "name": "Copa Maison", "price": 10900, "recommended": true },
-        { "name": "Crêpes", "price": 8900 },
-        { "name": "Crème brûlée", "price": 9800 },
+        {
+          "name": "Copa Maison",
+          "price": 10900,
+          "recommended": true
+        },
+        {
+          "name": "Crêpes",
+          "price": 8900
+        },
+        {
+          "name": "Crème brûlée",
+          "price": 9800
+        },
         {
           "name": "Helado",
           "price": 9200,
@@ -298,10 +395,22 @@
       "id": "bebidas",
       "title": "Bebidas",
       "items": [
-        { "name": "Agua mineral", "price": 4200 },
-        { "name": "Agua saborizada", "price": 4600 },
-        { "name": "Gaseosa", "price": 5200 },
-        { "name": "Tónica", "price": 5900 }
+        {
+          "name": "Agua mineral",
+          "price": 4200
+        },
+        {
+          "name": "Agua saborizada",
+          "price": 4600
+        },
+        {
+          "name": "Gaseosa",
+          "price": 5200
+        },
+        {
+          "name": "Tónica",
+          "price": 5900
+        }
       ]
     }
   ]
