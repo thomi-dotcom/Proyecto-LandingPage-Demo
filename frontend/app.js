@@ -61,7 +61,7 @@ Gracias por escribir a ${BUSINESS_NAME} ☕✨
   };
 
   // =========================================================
-  // ADMIN oculto: CTRL + A + D => abre admin.html en nueva pestaña
+  // ADMIN oculto: CTRL + A + D => abre admin.html (MISMA PESTAÑA)
   // =========================================================
   (() => {
     // Guardamos teclas presionadas
@@ -76,9 +76,6 @@ Gracias por escribir a ${BUSINESS_NAME} ☕✨
 
     function shouldOpenAdmin() {
       // Ctrl + A + D
-      // - Control: "Control"
-      // - A: "a" / "A"
-      // - D: "d" / "D"
       const hasCtrl = pressed.has("Control");
       const hasA = pressed.has("a") || pressed.has("A");
       const hasD = pressed.has("d") || pressed.has("D");
@@ -95,8 +92,8 @@ Gracias por escribir a ${BUSINESS_NAME} ☕✨
         // Evita que Ctrl+A seleccione toda la página
         e.preventDefault();
 
-        // Abre admin en otra pestaña (sin acceso a window.opener)
-        window.open("./admin.html", "_blank", "noopener,noreferrer");
+        // ✅ CAMBIO: Ahora usa location.href para abrir en la misma ventana
+        window.location.href = "./admin.html";
 
         // Limpieza para que no dispare varias veces
         pressed.clear();
@@ -145,18 +142,26 @@ Gracias por escribir a ${BUSINESS_NAME} ☕✨
     // Si viene embed directo desde config, lo usamos
     if (config.location?.mapsEmbed) return config.location.mapsEmbed;
 
-    // Sino, armamos embed por query
-    const q = encodeURIComponent(MAPS_QUERY);
-    return `https://www.google.com/maps?q=${q}&output=embed`;
+    // Sino, armamos embed por query (NOTA: requiere API Key real para funcionar perfecto,
+    // o usar el embed simple de Google Maps). 
+    // Como fallback genérico, retornamos string vacío si no hay URL configurada.
+    return "";
   }
 
   function initMapsEmbedLazy() {
     if (!$mapsFrame) return;
 
+    const embedUrl = buildMapsEmbedUrl();
+    if (!embedUrl) {
+        // Si no hay URL de embed, ocultamos el esqueleto para que no quede cargando infinito
+        if ($mapSkeleton) $mapSkeleton.style.display = "none";
+        return; 
+    }
+
     const load = () => {
       if ($mapsFrame.dataset.loaded === "1") return;
 
-      $mapsFrame.src = buildMapsEmbedUrl();
+      $mapsFrame.src = embedUrl;
       $mapsFrame.dataset.loaded = "1";
 
       $mapsFrame.addEventListener(
@@ -339,46 +344,35 @@ Gracias
     initReveal();
   }
 
-  // ---------- Load Menu JSON ----------
+// ---------- Load Menu (CLOUD) ----------
   async function loadMenu() {
-    // 1) Si hay menú editado por admin, usamos ese
-    const override = localStorage.getItem("menu_override_v1");
-    if (override) {
-      try {
-        return JSON.parse(override);
-      } catch (e) {
-        console.warn("menu_override_v1 inválido, lo ignoro");
-        localStorage.removeItem("menu_override_v1");
-      }
-    }
-
-    // 2) Si no, cargamos el menu.json normal
-    const url = "./data/menu.json";
-    let res;
-
+    // 1. Intentamos leer de la nube (JSONBin)
     try {
-      res = await fetch(url, { cache: "no-store" });
-    } catch (e) {
-      throw new Error(
-        `Fetch falló (${url}). ¿file://? Usá un server local. Detalle: ${e.message}`
-      );
-    }
+      // Usamos las credenciales de config.js
+      const { binId, apiKey } = window.SITE_CONFIG.api;
+      
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+        headers: {
+          'X-Master-Key': apiKey
+        }
+      });
 
-    if (!res.ok) {
-      throw new Error(`No se pudo cargar ${url}. HTTP ${res.status} ${res.statusText}`);
-    }
+      if (!res.ok) throw new Error("Error conectando con la nube");
 
-    const text = await res.text();
-    try {
-      return JSON.parse(text);
+      const json = await res.json();
+      // JSONBin devuelve los datos dentro de una propiedad "record"
+      return json.record; 
+
     } catch (e) {
-      throw new Error(`JSON inválido en ${url}: ${e.message}`);
+      console.error("Fallo la nube, intentando local...", e);
+      // Fallback: Si falla internet, carga el local
+      const res = await fetch("./data/menu.json");
+      return await res.json();
     }
   }
 
   // ---------- Init ----------
   async function init() {
-    // Guard rails: sin config o sin phone, seguimos con fallback
     setGlobalWALinks();
     setMapsLink();
 
@@ -428,84 +422,75 @@ Gracias
   });
 
    // =========================================================
-// MOBILE NAV: robust (pointerdown + capture + backdrop + ESC)
-// =========================================================
-(() => {
-  const body = document.body;
-  const toggle = document.querySelector(".nav__toggle");
-  const drawer = document.getElementById("mobileNav");
-  const backdrop = document.querySelector(".nav__backdrop");
-
-  if (!toggle || !drawer || !backdrop) return;
-
-  const setOpen = (open) => {
-    body.classList.toggle("nav-open", open);
-    toggle.setAttribute("aria-expanded", String(open));
-    toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
-
-    if (open) {
-      const firstLink = drawer.querySelector("a");
-      firstLink?.focus?.();
-    } else {
-      toggle.focus?.();
-    }
-  };
-
-  const isOpen = () => body.classList.contains("nav-open");
-
-  // Toggle
-  toggle.addEventListener("click", (e) => {
-    e.preventDefault();
-    setOpen(!isOpen());
-  });
-
-  // Backdrop explícito (si llega el evento)
-  backdrop.addEventListener("pointerdown", (e) => {
-    e.preventDefault();
-    setOpen(false);
-  });
-
-  // Cerrar al tocar un link dentro del drawer
-  drawer.addEventListener("click", (e) => {
-    const a = e.target.closest("a");
-    if (a && isOpen()) setOpen(false);
-  });
-
-  // Cerrar con ESC
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && isOpen()) setOpen(false);
-  });
-
-  // ✅ Click/Tap outside SUPER robusto (captura + pointerdown)
-  document.addEventListener(
-    "pointerdown",
-    (e) => {
-      if (!isOpen()) return;
-
-      const t = e.target;
-
-      // Si tocás el backdrop (aunque haya overlays raros), cierra
-      if (t && t.closest && t.closest("[data-nav-close]")) {
-        setOpen(false);
-        return;
+   // MOBILE NAV
+   // =========================================================
+   (() => {
+    const body = document.body;
+    const toggle = document.querySelector(".nav__toggle");
+    const drawer = document.getElementById("mobileNav");
+    const backdrop = document.querySelector(".nav__backdrop");
+  
+    if (!toggle || !drawer || !backdrop) return;
+  
+    const setOpen = (open) => {
+      body.classList.toggle("nav-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+  
+      if (open) {
+        const firstLink = drawer.querySelector("a");
+        firstLink?.focus?.();
+      } else {
+        toggle.focus?.();
       }
-
-      // Si tocás dentro del drawer o en el toggle, no cierro
-      if (drawer.contains(t) || toggle.contains(t)) return;
-
-      // Si tocás cualquier otra cosa: cierro
+    };
+  
+    const isOpen = () => body.classList.contains("nav-open");
+  
+    // Toggle
+    toggle.addEventListener("click", (e) => {
+      e.preventDefault();
+      setOpen(!isOpen());
+    });
+  
+    // Backdrop explícito
+    backdrop.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
       setOpen(false);
-    },
-    true // capture
-  );
-
-  // Si cambia a desktop, cerramos estado abierto
-  const mq = window.matchMedia("(min-width: 861px)");
-  mq.addEventListener?.("change", (e) => {
-    if (e.matches) setOpen(false);
-  });
-})();
-
-
+    });
+  
+    // Cerrar al tocar un link
+    drawer.addEventListener("click", (e) => {
+      const a = e.target.closest("a");
+      if (a && isOpen()) setOpen(false);
+    });
+  
+    // Cerrar con ESC
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && isOpen()) setOpen(false);
+    });
+  
+    // Click outside robusto
+    document.addEventListener(
+      "pointerdown",
+      (e) => {
+        if (!isOpen()) return;
+        const t = e.target;
+        if (t && t.closest && t.closest("[data-nav-close]")) {
+          setOpen(false);
+          return;
+        }
+        if (drawer.contains(t) || toggle.contains(t)) return;
+        setOpen(false);
+      },
+      true 
+    );
+  
+    // Si cambia a desktop, cerrar
+    const mq = window.matchMedia("(min-width: 861px)");
+    mq.addEventListener?.("change", (e) => {
+      if (e.matches) setOpen(false);
+    });
+  })();
 
 })();

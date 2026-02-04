@@ -1389,3 +1389,104 @@ body.nav-open { overflow: hidden; } /* cuando abre, bloquea scroll */
     letter-spacing: 0.08em;
   }
 }
+
+/* =========================================
+   14) Custom Scrollbar (Dark Theme)
+   ========================================= */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15); /* Gris sutil */
+  border-radius: 99px;
+  border: 2px solid var(--bg); /* Crea efecto de "padding" */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3); /* Un poco más claro al tocar */
+}
+
+/* =========================================
+   15) Estado: Sin Stock / Agotado
+   ========================================= */
+.menuItem.no-stock {
+  opacity: 0.6;
+  filter: grayscale(1); /* Foto en blanco y negro */
+  pointer-events: none; /* No se puede clickear */
+  position: relative;
+}
+
+.menuItem.no-stock::after {
+  content: "AGOTADO";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  backdrop-filter: blur(4px);
+  z-index: 10;
+}
+
+/* =========================================
+   16) Print Styles (Ahorro de tinta)
+   ========================================= */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Ocultar elementos innecesarios */
+  .topbar, .hero, .menuTools, .ctaBlock, .footer, .mapWrap, .quick, .badge {
+    display: none !important;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  /* Re-estilar las tarjetas para papel */
+  .menuGrid {
+    display: block; /* Lista vertical */
+  }
+
+  .menuItem {
+    border: none;
+    border-bottom: 1px dotted #000;
+    border-radius: 0;
+    background: transparent !important;
+    page-break-inside: avoid; /* No cortar items a la mitad */
+    padding: 10px 0;
+    box-shadow: none !important;
+    color: #000 !important;
+  }
+
+  .menuItem h4 {
+    font-size: 16px;
+    color: #000;
+  }
+
+  .menuItem p {
+    color: #444 !important;
+  }
+
+  .price {
+    font-weight: bold;
+    color: #000 !important;
+  }
+}
