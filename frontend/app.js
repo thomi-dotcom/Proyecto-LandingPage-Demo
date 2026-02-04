@@ -6,10 +6,21 @@
   const config = window.SITE_CONFIG || {};
 
   const BUSINESS_NAME = config.business?.name || "Maison Lúmina";
-  const WHATSAPP_PHONE = (config.whatsapp?.phone || "").replace(/\D/g, "") || "5491112345678";
+  const WHATSAPP_PHONE =
+    (config.whatsapp?.phone || "").replace(/\D/g, "") || "5491112345678";
   const WHATSAPP_DEFAULT_MESSAGE =
-    config.whatsapp?.defaultMessage ||
-    `Hola! Quisiera hacer una consulta / reserva en ${BUSINESS_NAME}`;
+  config.whatsapp?.defaultMessage ||
+  `
+Hola! 👋
+Gracias por escribir a ${BUSINESS_NAME} ☕✨
+
+¿En qué podemos ayudarte?
+1️⃣ Reservar mesa
+2️⃣ Ver la carta / hacer un pedido
+3️⃣ Consultar horarios
+4️⃣ Ubicación
+5️⃣ Otra consulta
+`.trim();
 
   // Mapa: podés proveer mapsUrl y mapsEmbed desde config.js
   // Si no están, construimos a partir de un "mapsQuery" (address)
@@ -48,6 +59,59 @@
     q: "",
     loading: true,
   };
+
+  // =========================================================
+  // ADMIN oculto: CTRL + A + D => abre admin.html en nueva pestaña
+  // =========================================================
+  (() => {
+    // Guardamos teclas presionadas
+    const pressed = new Set();
+
+    function isInputFocused() {
+      const el = document.activeElement;
+      if (!el) return false;
+      const tag = (el.tagName || "").toUpperCase();
+      return tag === "INPUT" || tag === "TEXTAREA" || el.isContentEditable;
+    }
+
+    function shouldOpenAdmin() {
+      // Ctrl + A + D
+      // - Control: "Control"
+      // - A: "a" / "A"
+      // - D: "d" / "D"
+      const hasCtrl = pressed.has("Control");
+      const hasA = pressed.has("a") || pressed.has("A");
+      const hasD = pressed.has("d") || pressed.has("D");
+      return hasCtrl && hasA && hasD;
+    }
+
+    window.addEventListener("keydown", (e) => {
+      // Si estás escribiendo en inputs, no queremos atajos raros
+      if (isInputFocused()) return;
+
+      pressed.add(e.key);
+
+      if (shouldOpenAdmin()) {
+        // Evita que Ctrl+A seleccione toda la página
+        e.preventDefault();
+
+        // Abre admin en otra pestaña (sin acceso a window.opener)
+        window.open("./admin.html", "_blank", "noopener,noreferrer");
+
+        // Limpieza para que no dispare varias veces
+        pressed.clear();
+      }
+    });
+
+    window.addEventListener("keyup", (e) => {
+      pressed.delete(e.key);
+    });
+
+    window.addEventListener("blur", () => {
+      // Si la pestaña pierde foco, limpiamos estado
+      pressed.clear();
+    });
+  })();
 
   // ---------- WhatsApp ----------
   function waLink(text) {
@@ -223,7 +287,15 @@
         const schedule = isScheduleNote(note) ? note : "";
         const extra = !schedule ? note : "";
 
-        const msg = `Hola! Quiero pedir/consultar: ${it.name} (${s.title}) — ${BUSINESS_NAME}.`;
+        const msg = `
+Hola! 
+Quisiera pedir/consultar:
+
+• ${it.name}
+(${s.title})
+
+Gracias 
+`.trim();
         const askHref = waLink(msg);
 
         const detailHtml = desc
@@ -287,7 +359,9 @@
     try {
       res = await fetch(url, { cache: "no-store" });
     } catch (e) {
-      throw new Error(`Fetch falló (${url}). ¿file://? Usá un server local. Detalle: ${e.message}`);
+      throw new Error(
+        `Fetch falló (${url}). ¿file://? Usá un server local. Detalle: ${e.message}`
+      );
     }
 
     if (!res.ok) {
@@ -352,4 +426,86 @@
       `;
     }
   });
+
+   // =========================================================
+// MOBILE NAV: robust (pointerdown + capture + backdrop + ESC)
+// =========================================================
+(() => {
+  const body = document.body;
+  const toggle = document.querySelector(".nav__toggle");
+  const drawer = document.getElementById("mobileNav");
+  const backdrop = document.querySelector(".nav__backdrop");
+
+  if (!toggle || !drawer || !backdrop) return;
+
+  const setOpen = (open) => {
+    body.classList.toggle("nav-open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+
+    if (open) {
+      const firstLink = drawer.querySelector("a");
+      firstLink?.focus?.();
+    } else {
+      toggle.focus?.();
+    }
+  };
+
+  const isOpen = () => body.classList.contains("nav-open");
+
+  // Toggle
+  toggle.addEventListener("click", (e) => {
+    e.preventDefault();
+    setOpen(!isOpen());
+  });
+
+  // Backdrop explícito (si llega el evento)
+  backdrop.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    setOpen(false);
+  });
+
+  // Cerrar al tocar un link dentro del drawer
+  drawer.addEventListener("click", (e) => {
+    const a = e.target.closest("a");
+    if (a && isOpen()) setOpen(false);
+  });
+
+  // Cerrar con ESC
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen()) setOpen(false);
+  });
+
+  // ✅ Click/Tap outside SUPER robusto (captura + pointerdown)
+  document.addEventListener(
+    "pointerdown",
+    (e) => {
+      if (!isOpen()) return;
+
+      const t = e.target;
+
+      // Si tocás el backdrop (aunque haya overlays raros), cierra
+      if (t && t.closest && t.closest("[data-nav-close]")) {
+        setOpen(false);
+        return;
+      }
+
+      // Si tocás dentro del drawer o en el toggle, no cierro
+      if (drawer.contains(t) || toggle.contains(t)) return;
+
+      // Si tocás cualquier otra cosa: cierro
+      setOpen(false);
+    },
+    true // capture
+  );
+
+  // Si cambia a desktop, cerramos estado abierto
+  const mq = window.matchMedia("(min-width: 861px)");
+  mq.addEventListener?.("change", (e) => {
+    if (e.matches) setOpen(false);
+  });
+})();
+
+
+
 })();

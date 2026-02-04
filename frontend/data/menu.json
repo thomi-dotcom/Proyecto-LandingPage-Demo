@@ -18,6 +18,7 @@
           "name": "Lúmina Clásico",
           "price": 9800,
           "desc": "Infusión a elección, jugo cítrico, 2 viennoiseries (croissant o pain au chocolat).",
+          "image": "./assets/maison_tea.jpg",
           "recommended": true
         },
         {
@@ -88,18 +89,21 @@
         {
           "name": "Bagel de salmón",
           "price": 28900,
+          "desc": "Bagel suave relleno con láminas de salmón ahumado, queso crema y brotes verdes, en una composición limpia y luminosa.",
           "note": "Opción jamón crudo: $21900",
           "image": "./assets/bagel.jpg"
         },
         {
           "name": "Vegetariano Maison",
+          "desc": "Bagel artesanal con relleno vegetal fresco, capas prolijas y tonos naturales que resaltan la simpleza y el equilibrio del plato.",
           "price": 20900,
-          "image": "./assets/bagel.jpg"
+          "image": "./assets/vegetariano.jpg"
         },
         {
           "name": "Chicken Dijon",
+          "desc": "Sándwich gourmet de pollo con vegetales asados y salsa suave, servido en pan crocante con guarnición, de aspecto cálido y apetitoso.",
           "price": 22900,
-          "image": "./assets/sandwich_mediterraneo.jpg",
+          "image": "./assets/chicken.jpg",
           "recommended": true
         }
       ]
