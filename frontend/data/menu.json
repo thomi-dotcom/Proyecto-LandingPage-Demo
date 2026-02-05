@@ -19,7 +19,8 @@
           "price": 12000,
           "desc": "Infusión a elección, jugo cítrico, 2 viennoiseries (croissant o pain au chocolat).",
           "image": "./assets/maison_tea.jpg",
-          "recommended": true
+          "recommended": true, 
+          "available": false
         },
         {
           "name": "Rivoli Light",
