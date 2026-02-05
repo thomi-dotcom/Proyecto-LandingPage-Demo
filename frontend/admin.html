@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin | Maison Lúmina</title>
+  <title>Panel de Admin | Maison Lúmina</title>
 
   <style>
     :root {
-      /* Tema Oscuro (Default) */
+      /* Tus variables originales */
       --bg: #0b0f12;
       --card: #141a1f;
       --text: #f6f7f8;
@@ -50,199 +50,131 @@
       transition: background 0.3s ease, color 0.3s ease;
     }
 
-    body.is-locked{ overflow:hidden; }
-
     .wrap{
-      max-width: 1150px;
+      max-width: 1000px; /* Un poco más ancho para las tarjetas */
       margin: 0 auto;
-      padding: 18px 18px 64px;
+      padding: 18px 18px 80px; /* Espacio abajo para el botón flotante */
     }
 
     .header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-      margin: 6px 0 14px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px; flex-wrap:wrap; margin: 6px 0 14px;
     }
-    
     h1{ margin:0; font-size: 26px; letter-spacing:.01em; }
 
     /* Toolbar */
     .toolbar{
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: var(--toolbar-bg);
-      backdrop-filter: blur(10px);
+      position: sticky; top: 10px; z-index: 100;
+      background: var(--toolbar-bg); backdrop-filter: blur(10px);
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      border-radius: var(--radius); padding: 12px; margin: 10px 0 20px;
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    }
+
+    /* Inputs Genéricos */
+    input[type="text"], input[type="number"], textarea {
+      background: rgba(255,255,255,0.05);
       border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-      border-radius: var(--radius);
-      padding: 12px;
-      margin: 10px 0 12px;
-    }
-    .toolbarGrid{
-      display:grid;
-      grid-template-columns: 1.3fr .9fr auto;
-      gap: 10px;
-      align-items:center;
-    }
-
-    .search{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      background: rgba(255,255,255,0.05);
-      border:1px solid var(--border);
-      border-radius: 14px;
-      padding: 10px 12px;
-    }
-    [data-theme="light"] .search { background: #fff; }
-
-    .search input{
-      border:0;
-      outline:none;
-      flex:1;
-      font-size:14px;
-      background: transparent;
-      color: inherit;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 8px 12px;
-      border:1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(255,255,255,0.03);
-      font-size:13px;
-      color: var(--muted);
-    }
-    [data-theme="light"] .pill { background: #fff; }
-    .pill strong{ color: var(--text); font-weight:700; }
-
-    /* Buttons */
-    .btn{
-      padding:10px 14px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,0.05);
       color: var(--text);
-      cursor:pointer;
-      font-weight:700;
-      font-size:14px;
-      transition: all .15s ease;
-      white-space: nowrap;
-    }
-    [data-theme="light"] .btn { background: #fff; }
-
-    .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-
-    .btnPrimary{
-      background: linear-gradient(180deg, var(--olive), var(--olive-2));
-      color:#fff;
-      border: none;
-    }
-
-    /* List */
-    .list{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
-      overflow:hidden;
-    }
-
-    .listHead{
-      display:grid;
-      grid-template-columns: 1.05fr 1.4fr .8fr;
-      gap: 10px;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 11px;
-      text-transform: uppercase;
-      background: rgba(255,255,255,0.02);
-    }
-
-    .itemRow{
-      display:grid;
-      grid-template-columns: 1.05fr 1.4fr .8fr;
-      gap: 10px;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      align-items:center;
-    }
-    .itemRow:hover{ background: rgba(60, 140, 100, 0.08); }
-
-    .sec{ font-weight:800; font-size: 13px; opacity: 0.8; }
-    .name{ font-weight:700; font-size:14px; }
-    .sub{ display:block; font-size:12px; color: var(--muted); margin-top: 2px; }
-
-    input[type="number"]{
-      width: 140px;
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      width: 100%;
+      font-family: inherit;
       font-size: 14px;
-      text-align:right;
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
     }
-    [data-theme="light"] input[type="number"] { background: #fff; }
+    [data-theme="light"] input, [data-theme="light"] textarea { background: #f0f0f0; border-color:#ccc; color: #000; }
+    
+    input:focus, textarea:focus { outline: none; border-color: var(--olive); }
 
-    .changed{
-      background: rgba(60, 140, 100, 0.15) !important;
-      border-color: var(--olive) !important;
+    /* Botones */
+    .btn{
+      padding:10px 14px; border-radius:12px; border:1px solid var(--border);
+      background: rgba(255,255,255,0.05); color: var(--text);
+      cursor:pointer; font-weight:700; font-size:13px; transition: all .15s ease;
     }
+    [data-theme="light"] .btn { background: #fff; border-color:#ddd; color:#333; }
+    .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    
+    .btn-primary{ background: var(--olive); color:#fff; border:none; }
+    .btn-danger { color: var(--danger); border-color: var(--danger); background: transparent; }
 
-    /* PIN overlay */
-    .pinOverlay{
-      position: fixed;
-      inset: 0;
-      background: rgba(7,10,13,0.96);
-      backdrop-filter: blur(10px);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index: 9999;
-    }
-    .pinCard{
-      width: min(400px, 90%);
-      background: var(--card);
+    /* --- NUEVO: Estilo Acordeón y Tarjetas --- */
+    .section-block {
+      margin-bottom: 20px;
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 32px;
-      text-align: center;
+      border-radius: var(--radius);
+      background: var(--card);
+      overflow: hidden;
     }
-
-    /* Scrollbar Dark */
-    ::-webkit-scrollbar { width: 10px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 99px;
-      border: 2px solid var(--bg);
+    
+    .section-header {
+      padding: 15px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      font-weight: 700; font-size: 15px;
     }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+    .section-header:hover { background: rgba(255,255,255,0.06); }
 
-    /* Mobile */
-    @media (max-width: 860px){
-      .toolbarGrid{ grid-template-columns: 1fr; }
-      .listHead{ display:none; }
-      .itemRow{ grid-template-columns: 1fr; }
+    .items-container { display: none; padding: 15px; display: grid; gap: 15px; }
+    .section-block.collapsed .items-container { display: none; }
+    .section-block.collapsed .section-header { border-bottom: none; }
+
+    /* Tarjeta de Producto */
+    .item-card {
+      display: grid; 
+      grid-template-columns: 60px 1fr 40px; /* Switch | Inputs | Delete */
+      gap: 15px;
+      background: rgba(0,0,0,0.15);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 15px;
+      align-items: start;
     }
+    [data-theme="light"] .item-card { background: #f4f4f4; border-color: #ddd; }
 
-    /* Print */
-    @media print {
-      body { background: #fff !important; color: #000 !important; }
-      .topbar, .header .btn, .toolbar, .status, .pinOverlay { display: none !important; }
-      .wrap { padding: 0; max-width: 100%; }
-      .list { box-shadow: none; border: none; }
-      .itemRow { border-bottom: 1px dotted #ccc; page-break-inside: avoid; }
-      input[type="number"] { border: none; background: transparent; text-align: right; font-weight: bold; color: #000; }
+    .item-main { display: flex; flex-direction: column; gap: 10px; }
+    .row-inputs { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+    
+    label { font-size: 10px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+
+    /* Switch de Stock */
+    .stock-switch {
+      display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer;
+    }
+    .switch-track {
+      width: 36px; height: 20px; background: #555; border-radius: 20px; position: relative; transition: 0.3s;
+    }
+    .switch-thumb {
+      width: 14px; height: 14px; background: white; border-radius: 50%;
+      position: absolute; top: 3px; left: 3px; transition: 0.3s;
+    }
+    /* Activo */
+    .stock-active .switch-track { background: var(--olive); }
+    .stock-active .switch-thumb { transform: translateX(16px); }
+    .stock-label { font-size: 9px; font-weight: bold; color: var(--muted); text-align: center;}
+
+    /* Barra Flotante de Guardado */
+    .unsaved-bar {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: var(--olive); color: white;
+      padding: 12px 24px; border-radius: 50px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      display: flex; gap: 15px; align-items: center; z-index: 999;
+      opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .unsaved-bar.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* PIN Overlay (Igual que antes) */
+    .pinOverlay{ position: fixed; inset: 0; background: rgba(7,10,13,0.98); backdrop-filter: blur(5px); display:flex; align-items:center; justify-content:center; z-index: 9999; }
+    .pinCard{ width: 300px; background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 30px; text-align: center; }
+
+    @media (max-width: 600px) {
+      .item-card { grid-template-columns: 1fr; position: relative;}
+      .stock-switch { flex-direction: row; justify-content: space-between; margin-bottom: 10px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; }
+      .btn-delete-mobile { position: absolute; top: 10px; right: 10px; }
+      .row-inputs { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -250,240 +182,327 @@
 <body>
   <div class="pinOverlay" id="pinOverlay">
     <div class="pinCard">
-      <h2 style="margin-top:0">Acceso Admin</h2>
-      <p class="muted">Maison Lúmina — Panel de Precios</p>
-      <input class="btn" style="width:100%; margin-top:10px; text-align:center; font-size:18px" id="pinInput" type="password" placeholder="PIN" />
-      <button class="btn btnPrimary" id="pinBtn" style="width:100%; margin-top:10px; padding:15px">Entrar</button>
-      <div id="pinError" style="color:var(--danger); margin-top:10px; display:none">PIN incorrecto</div>
+      <h2>Acceso Admin</h2>
+      <input class="btn" style="width:100%; margin:10px 0; text-align:center; font-size:18px" id="pinInput" type="password" placeholder="PIN" />
+      <button class="btn btn-primary" id="pinBtn" style="width:100%">Entrar</button>
+      <div id="pinError" style="color:var(--danger); margin-top:10px; display:none">Incorrecto</div>
     </div>
   </div>
 
   <div class="wrap">
     <div class="header">
       <div>
-        <h1>Admin — Precios</h1>
-        <div class="muted">Gestión de menú Maison Lúmina.</div>
+        <h1>Panel Admin</h1>
+        <div class="muted">Gestión total del menú.</div>
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <div style="display:flex; gap:10px;">
         <button class="btn" onclick="window.location.href='./index.html'">← Volver</button>
-        <button class="btn" id="themeToggle">🌓 Modo</button>
-        <div class="pill">
-          <span>Modif:</span> <strong id="changedCount">0</strong>
-        </div>
+        <button class="btn" id="themeToggle">🌓 Tema</button>
       </div>
     </div>
 
     <div class="toolbar">
-      <div class="toolbarGrid">
-        <div class="search">
-          <span>🔎</span>
-          <input id="q" type="text" placeholder="Buscar producto o sección..." />
-        </div>
-
-        <label class="pill" style="cursor:pointer;">
-          <input id="onlyChanged" type="checkbox" style="accent-color: var(--olive);" />
-          <span>Ver solo modificados</span>
-        </label>
-
-        <div style="display:flex; gap:10px">
-          <button class="btn" id="btnExport">Exportar JSON</button>
-          <button class="btn btnPrimary" id="btnSave">Guardar</button>
-        </div>
+      <div style="flex:1; display:flex; gap:10px; align-items:center;">
+        <span>🔎</span>
+        <input id="searchInput" type="text" placeholder="Buscar plato, ingrediente..." style="border:none; background:transparent; font-size:16px; padding:0;">
       </div>
+      <button class="btn" onclick="expandAll(false)">Contraer Todo</button>
     </div>
 
-    <div class="list">
-      <div class="listHead">
-        <div>Sección</div>
-        <div>Producto</div>
-        <div style="text-align:right;">Precio</div>
-      </div>
-      <div id="listBody"></div>
-    </div>
+    <div id="menuContainer"></div>
+  </div>
+
+  <div class="unsaved-bar" id="unsavedBar">
+    <span style="font-weight:600">⚠️ Cambios sin guardar</span>
+    <button class="btn" style="background:white; color:var(--olive); font-weight:800" id="btnSave">GUARDAR AHORA</button>
   </div>
 
   <script src="config.js"></script>
 
   <script>
-    // ---- LÓGICA DE TEMA ----
+    // --- 1. CONFIG Y VARIABLES ---
+    const ADMIN_PIN = "1433"; 
+    let menuData = null;
+    let hasChanges = false;
+    
+    // --- 2. PIN Y TEMA ---
+    const pinOverlay = document.getElementById("pinOverlay");
+    const pinInput = document.getElementById("pinInput");
+    
+    document.getElementById("pinBtn").onclick = checkPin;
+    pinInput.onkeydown = (e) => { if(e.key === 'Enter') checkPin() };
+
+    function checkPin(){
+      if (pinInput.value === ADMIN_PIN) {
+        pinOverlay.style.display = "none";
+      } else {
+        document.getElementById("pinError").style.display = "block";
+        pinInput.value = "";
+      }
+    }
+
     const themeBtn = document.getElementById('themeToggle');
     themeBtn.onclick = () => {
       const isLight = document.body.getAttribute('data-theme') === 'light';
       document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
     };
 
-    // ---- PIN ----
-    const ADMIN_PIN = "1433"; 
-    const overlay = document.getElementById("pinOverlay");
-    const pinInput = document.getElementById("pinInput");
-    const pinBtn = document.getElementById("pinBtn");
-    
-    function checkPin(){
-      if (pinInput.value === ADMIN_PIN) {
-        overlay.style.display = "none";
-        document.body.classList.remove("is-locked");
-      } else {
-        document.getElementById("pinError").style.display = "block";
-        pinInput.value = "";
+    // --- 3. LOGICA PRINCIPAL ---
+    async function init() {
+      try {
+        const url = window.SITE_CONFIG.api.baseUrl;
+        const res = await fetch(url);
+        if(!res.ok) throw new Error("Error fetching");
+        menuData = await res.json();
+        
+        // Parche de seguridad por si es un JSON viejo
+        if (!menuData.sections) menuData.sections = [];
+        
+        render();
+      } catch (e) {
+        alert("Error cargando datos. Asegurate que el servidor backend esté corriendo (npm start).");
+        console.error(e);
       }
     }
-    pinBtn.onclick = checkPin;
-    pinInput.onkeydown = (e) => { if(e.key === 'Enter') checkPin() };
 
-    // ---- GESTIÓN DE DATOS (Nube) ----
-    (async () => {
-      const STORAGE_KEY = "menu_override_v1";
-      const listBody = document.getElementById("listBody");
-      const q = document.getElementById("q");
-      const onlyChanged = document.getElementById("onlyChanged");
-      const changedCountEl = document.getElementById("changedCount");
-      const btnSave = document.getElementById("btnSave");
+    // Marca que hubo cambios y muestra el botón flotante
+    function markChanged() {
+      hasChanges = true;
+      document.getElementById('unsavedBar').classList.add('visible');
+      window.onbeforeunload = () => "Tienes cambios sin guardar";
+    }
 
-      let menu = null;
-      let flat = [];
-      let dirty = new Set();
-      let originalPrices = new Map();
+    // Renderiza todo el menú (Acordeones + Tarjetas)
+    function render() {
+      const container = document.getElementById('menuContainer');
+      container.innerHTML = '';
+      const term = document.getElementById('searchInput').value.toLowerCase();
 
-      // Carga de menú (NUBE con fallback)
-      async function loadMenu(){
-        try {
-          // Intentamos nube
-          const config = window.SITE_CONFIG;
-          if(config && config.api && config.api.binId){
-            const { binId, apiKey } = config.api;
-            const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-              headers: { 'X-Master-Key': apiKey }
-            });
-            if(res.ok){
-              const json = await res.json();
-              return json.record;
-            }
-          }
-        } catch(e) { console.warn("Fallo nube en admin, usando local", e); }
+      menuData.sections.forEach((section, secIdx) => {
+        // Filtramos items para la búsqueda
+        const filteredItems = section.items.filter(i => 
+          i.name.toLowerCase().includes(term) || (i.desc && i.desc.toLowerCase().includes(term))
+        );
+
+        if (term && filteredItems.length === 0) return; // Si busco y no hay nada aquí, oculto sección
+
+        const itemsToShow = term ? filteredItems : section.items;
+
+        // Crear contenedor de sección
+        const secDiv = document.createElement('div');
+        secDiv.className = `section-block ${term ? '' : 'collapsed'}`; // Expandir si busco
         
-        // Fallback local
-        const local = localStorage.getItem(STORAGE_KEY);
-        if(local) return JSON.parse(local);
-        const res = await fetch("./data/menu.json");
-        return res.json();
-      }
+        secDiv.innerHTML = `
+          <div class="section-header" onclick="toggleSection(this)">
+            <span>${section.title} <span style="font-weight:400; opacity:0.5; font-size:12px">(${itemsToShow.length})</span></span>
+            <span style="opacity:0.5">▼</span>
+          </div>
+          <div class="items-container">
+            </div>
+          <div style="padding:10px; background:rgba(0,0,0,0.1); text-align:center">
+             <button class="btn" style="width:100%; border-style:dashed; opacity:0.7" onclick="addItem(${secIdx})">+ Agregar Plato a ${section.title}</button>
+          </div>
+        `;
 
-      function normalize(menuObj){
-        const out = [];
-        if(!menuObj.sections) return out;
-        menuObj.sections.forEach(sec => {
-          sec.items.forEach(item => {
-            const id = `${sec.id}-${item.name}`.replace(/\s+/g, '-').toLowerCase();
-            out.push({ id, secTitle: sec.title, item, name: item.name });
-            originalPrices.set(id, item.price);
-          });
-        });
-        return out;
-      }
+        const itemsCont = secDiv.querySelector('.items-container');
 
-      // ESTA es la función que te daba error: ahora está segura dentro del bloque
-      function updateCounters(){
-        changedCountEl.textContent = dirty.size;
-      }
+        itemsToShow.forEach((item, itemIdx) => {
+          // Importante: encontrar el índice real en el array original para no romper al editar filtrado
+          const realIdx = section.items.indexOf(item);
+          const isAvailable = item.available !== false; // Default true
 
-      function render(){
-        listBody.innerHTML = "";
-        const query = q.value.toLowerCase();
-        
-        flat.forEach(r => {
-          if (onlyChanged.checked && !dirty.has(r.id)) return;
-          if (query && !r.name.toLowerCase().includes(query) && !r.secTitle.toLowerCase().includes(query)) return;
+          const card = document.createElement('div');
+          card.className = 'item-card';
+          card.innerHTML = `
+            <div class="stock-switch ${isAvailable ? 'stock-active' : ''}" onclick="toggleStock(${secIdx}, ${realIdx})" title="Click para cambiar estado">
+              <div class="switch-track"><div class="switch-thumb"></div></div>
+              <div class="stock-label">${isAvailable ? 'STOCK' : 'AGOTADO'}</div>
+            </div>
 
-          const row = document.createElement("div");
-          row.className = "itemRow";
-          if(dirty.has(r.id)) row.classList.add("changed");
+            <div class="item-main">
+              <div class="row-inputs">
+                <div>
+                  <label>Nombre del Producto</label>
+                  <input type="text" value="${item.name}" oninput="updateItem(${secIdx}, ${realIdx}, 'name', this.value)">
+                </div>
+                <div>
+                  <label>Precio ($)</label>
+                  <input type="number" value="${item.price}" oninput="updateItem(${secIdx}, ${realIdx}, 'price', Number(this.value))">
+                </div>
+              </div>
+              
+              <div>
+                <label>Descripción / Ingredientes</label>
+                <textarea rows="2" oninput="updateItem(${secIdx}, ${realIdx}, 'desc', this.value)">${item.desc || ''}</textarea>
+              </div>
 
-          row.innerHTML = `
-            <div class="sec">${r.secTitle}</div>
-            <div class="name">${r.name}<span class="sub">ARS</span></div>
+              <div>
+  <label>Imagen (URL o Subir)</label>
+  <div style="display:flex; gap:8px;">
+    <input type="text" value="${item.image || ''}" 
+           placeholder="./assets/foto.jpg" 
+           id="img-input-${secIdx}-${realIdx}"
+           oninput="updateItem(${secIdx}, ${realIdx}, 'image', this.value)">
+    
+    <label class="btn" style="padding:8px 12px; cursor:pointer;" title="Subir desde PC">
+      📤
+      <input type="file" hidden accept="image/*" 
+             onchange="uploadImage(this, ${secIdx}, ${realIdx})">
+    </label>
+  </div>
+</div>
+
             <div style="text-align:right">
-              <input type="number" value="${r.item.price}" data-id="${r.id}">
+              <button class="btn btn-danger btn-delete-mobile" onclick="deleteItem(${secIdx}, ${realIdx})" title="Eliminar plato">✕</button>
             </div>
           `;
-
-          const inp = row.querySelector('input');
-          inp.oninput = () => {
-            const val = Number(inp.value);
-            r.item.price = val;
-            
-            // Lógica de "sucio" (modificado)
-            if(val !== originalPrices.get(r.id)) dirty.add(r.id);
-            else dirty.delete(r.id);
-            
-            updateCounters(); // Ahora sí la encuentra :)
-
-            if(val !== originalPrices.get(r.id)) row.classList.add("changed");
-            else row.classList.remove("changed");
-          };
-
-          listBody.appendChild(row);
+          itemsCont.appendChild(card);
         });
+
+        container.appendChild(secDiv);
+      });
+    }
+
+    // --- 4. FUNCIONES DE EDICIÓN ---
+    
+    window.toggleSection = (header) => {
+      header.parentElement.classList.toggle('collapsed');
+    };
+
+    window.expandAll = (expand) => {
+      document.querySelectorAll('.section-block').forEach(el => 
+        expand ? el.classList.remove('collapsed') : el.classList.add('collapsed')
+      );
+    };
+
+    window.toggleStock = (secIdx, itemIdx) => {
+      const item = menuData.sections[secIdx].items[itemIdx];
+      item.available = item.available === false ? true : false;
+      markChanged();
+      render(); // Re-render para actualizar color visual
+    };
+
+    window.updateItem = (secIdx, itemIdx, field, val) => {
+      menuData.sections[secIdx].items[itemIdx][field] = val;
+      markChanged();
+    };
+
+    window.addItem = (secIdx) => {
+      menuData.sections[secIdx].items.push({
+        name: "Nuevo Producto",
+        price: 0,
+        desc: "",
+        available: true
+      });
+      markChanged();
+      render();
+      // Abrir la sección automáticamente
+      const sections = document.querySelectorAll('.section-block');
+      if(sections[secIdx]) sections[secIdx].classList.remove('collapsed');
+    };
+
+    window.deleteItem = (secIdx, itemIdx) => {
+      if(!confirm("¿Borrar este producto permanentemente?")) return;
+      menuData.sections[secIdx].items.splice(itemIdx, 1);
+      markChanged();
+      render();
+    };
+
+    document.getElementById('searchInput').addEventListener('input', render);
+
+    // --- 5. GUARDAR ---
+    document.getElementById('btnSave').onclick = async () => {
+      const btn = document.getElementById('btnSave');
+      try {
+        btn.textContent = "GUARDANDO...";
+        btn.disabled = true;
+
+        const url = window.SITE_CONFIG.api.baseUrl;
+        
+        const res = await fetch(url, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(menuData)
+        });
+
+        if (!res.ok) throw new Error("Error en servidor");
+
+        // Éxito
+        hasChanges = false;
+        window.onbeforeunload = null;
+        document.getElementById('unsavedBar').classList.remove('visible');
+        alert("¡Menú actualizado correctamente! ☁️");
+
+      } catch (e) {
+        alert("Error al guardar: " + e.message);
+      } finally {
+        btn.textContent = "GUARDAR AHORA";
+        btn.disabled = false;
+      }
+    };
+
+    // --- 6. SUBIR IMAGEN (Te faltaba esto) ---
+    window.uploadImage = async (inputElement, secIdx, itemIdx) => {
+      console.log("Intentando subir imagen...");
+      
+      if (!inputElement.files || !inputElement.files[0]) return;
+      const file = inputElement.files[0];
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      // Buscamos el input de texto para mostrar feedback
+      const textInputId = `img-input-${secIdx}-${itemIdx}`;
+      const textInput = document.getElementById(textInputId);
+      
+      if(!textInput) {
+          console.error("No encuentro el campo de texto con ID:", textInputId);
+          return;
       }
 
-      menu = await loadMenu();
-      flat = normalize(menu);
-      render();
+      // Feedback visual
+      const originalValue = textInput.value;
+      textInput.value = "Subiendo...";
+      textInput.disabled = true;
 
-      q.oninput = render;
-      onlyChanged.onchange = render;
+      try {
+        // Asegurate que el puerto 3000 sea el correcto
+        const res = await fetch("http://localhost:3000/api/upload", {
+          method: "POST",
+          body: formData
+        });
 
-      // BOTÓN GUARDAR EN NUBE
-      btnSave.onclick = async () => {
-        try {
-          btnSave.textContent = "Guardando...";
-          btnSave.disabled = true;
+        if (!res.ok) throw new Error("Error en el servidor al subir");
 
-          const config = window.SITE_CONFIG;
-          if (!config || !config.api) throw new Error("Faltan claves API en config.js");
-          const { binId, apiKey } = config.api;
+        const data = await res.json();
+        
+        // ¡Éxito!
+        // 1. Actualizamos el dato en memoria
+        updateItem(secIdx, itemIdx, 'image', data.filePath);
+        // 2. Actualizamos el input visual
+        textInput.value = data.filePath;
+        
+        // Opcional: Mostrar un tick verde temporal
+        inputElement.parentElement.innerHTML = "✅"; 
+        setTimeout(() => { 
+            // Restaurar el botón de subida (opcional, requiere render completo o lógica compleja, 
+            // pero con el render() al guardar se arregla solo)
+             render(); 
+        }, 1000);
 
-          const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Master-Key": apiKey
-            },
-            body: JSON.stringify(menu)
-          });
+      } catch (e) {
+        console.error(e);
+        alert("Error al subir: " + e.message + "\n(Revisá que el backend esté corriendo)");
+        textInput.value = originalValue; 
+      } finally {
+        textInput.disabled = false;
+        inputElement.value = ""; // Limpiar para permitir subir otra
+      }
+    };
 
-          if (!res.ok) throw new Error("Error al guardar en la nube.");
+    // Inicio
+    init();
 
-          // Limpieza
-          dirty.clear();
-          localStorage.removeItem(STORAGE_KEY);
-          updateCounters(); // Funciona perfecto aquí también
-          
-          alert("¡Guardado en la nube! ☁️\nLos cambios ya son visibles.");
-          
-        } catch (e) {
-          alert("Error: " + e.message);
-        } finally {
-          btnSave.textContent = "Guardar";
-          btnSave.disabled = false;
-        }
-      };
-
-      document.getElementById("btnExport").onclick = () => {
-        const blob = new Blob([JSON.stringify(menu, null, 2)], {type: "application/json"});
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "menu.json";
-        a.click();
-      };
-      
-      // Protección al salir
-      window.addEventListener("beforeunload", (e) => {
-        if(dirty.size > 0){
-          e.preventDefault();
-          e.returnValue = "";
-        }
-      });
-    })();
   </script>
 </body>
-</html>
+</html>3

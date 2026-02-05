@@ -2,52 +2,35 @@
   // ---------- Helpers ----------
   const $$ = (sel) => document.querySelector(sel);
 
-  // ---------- Config (with safe fallbacks) ----------
+  // ---------- Config ----------
   const config = window.SITE_CONFIG || {};
-
   const BUSINESS_NAME = config.business?.name || "Maison Lúmina";
-  const WHATSAPP_PHONE =
-    (config.whatsapp?.phone || "").replace(/\D/g, "") || "5491112345678";
-  const WHATSAPP_DEFAULT_MESSAGE =
-  config.whatsapp?.defaultMessage ||
-  `
-Hola! 👋
-Gracias por escribir a ${BUSINESS_NAME} ☕✨
-
-¿En qué podemos ayudarte?
-1️⃣ Reservar mesa
-2️⃣ Ver la carta / hacer un pedido
-3️⃣ Consultar horarios
-4️⃣ Ubicación
-5️⃣ Otra consulta
-`.trim();
-
-  // Mapa: podés proveer mapsUrl y mapsEmbed desde config.js
-  // Si no están, construimos a partir de un "mapsQuery" (address)
-  const MAPS_QUERY =
-    config.location?.mapsQuery ||
-    config.location?.address ||
-    config.location?.city ||
-    "CABA, Buenos Aires";
+  const WHATSAPP_PHONE = (config.whatsapp?.phone || "").replace(/\D/g, "") || "5491112345678";
+  
+  const WHATSAPP_DEFAULT_MESSAGE = config.whatsapp?.defaultMessage ||
+  `Hola! 👋\nGracias por escribir a ${BUSINESS_NAME} ☕✨\n\n¿En qué podemos ayudarte?`;
 
   // ---------- DOM ----------
   const $menuGrid = $$("#menuGrid");
   const $menuSearch = $$("#menuSearch");
   const $menuChips = $$("#menuChips");
 
+  // WhatsApp Links
   const $waTop = $$("#waTop");
   const $waHero = $$("#waHero");
   const $waMenu = $$("#waMenu");
   const $waHours = $$("#waHours");
   const $waBottom = $$("#waBottom");
 
+  // Maps
   const $mapsBtn = $$("#mapsBtn");
   const $mapsFrame = $$("#mapsFrame");
   const $mapSkeleton = $$("#mapSkeleton");
 
+  // Footer
   const $year = $$("#year");
   if ($year) $year.textContent = String(new Date().getFullYear());
-
+  
   const $hoursText = $$("#hoursText");
   if ($hoursText && config.hours?.text) $hoursText.textContent = config.hours.text;
 
@@ -61,56 +44,25 @@ Gracias por escribir a ${BUSINESS_NAME} ☕✨
   };
 
   // =========================================================
-  // ADMIN oculto: CTRL + A + D => abre admin.html (MISMA PESTAÑA)
+  // ADMIN SHORTCUT: CTRL + A + D
   // =========================================================
   (() => {
-    // Guardamos teclas presionadas
     const pressed = new Set();
-
-    function isInputFocused() {
-      const el = document.activeElement;
-      if (!el) return false;
-      const tag = (el.tagName || "").toUpperCase();
-      return tag === "INPUT" || tag === "TEXTAREA" || el.isContentEditable;
-    }
-
-    function shouldOpenAdmin() {
-      // Ctrl + A + D
-      const hasCtrl = pressed.has("Control");
-      const hasA = pressed.has("a") || pressed.has("A");
-      const hasD = pressed.has("d") || pressed.has("D");
-      return hasCtrl && hasA && hasD;
-    }
-
     window.addEventListener("keydown", (e) => {
-      // Si estás escribiendo en inputs, no queremos atajos raros
-      if (isInputFocused()) return;
-
+      const tag = document.activeElement ? document.activeElement.tagName : "";
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      
       pressed.add(e.key);
-
-      if (shouldOpenAdmin()) {
-        // Evita que Ctrl+A seleccione toda la página
+      if (pressed.has("Control") && (pressed.has("a") || pressed.has("A")) && (pressed.has("d") || pressed.has("D"))) {
         e.preventDefault();
-
-        // ✅ CAMBIO: Ahora usa location.href para abrir en la misma ventana
         window.location.href = "./admin.html";
-
-        // Limpieza para que no dispare varias veces
         pressed.clear();
       }
     });
-
-    window.addEventListener("keyup", (e) => {
-      pressed.delete(e.key);
-    });
-
-    window.addEventListener("blur", () => {
-      // Si la pestaña pierde foco, limpiamos estado
-      pressed.clear();
-    });
+    window.addEventListener("keyup", (e) => pressed.delete(e.key));
   })();
 
-  // ---------- WhatsApp ----------
+  // ---------- WhatsApp Helper ----------
   function waLink(text) {
     const msg = encodeURIComponent(text);
     return `https://wa.me/${WHATSAPP_PHONE}?text=${msg}`;
@@ -123,80 +75,35 @@ Gracias por escribir a ${BUSINESS_NAME} ☕✨
     });
   }
 
-  // ---------- Maps ----------
+  // ---------- Maps Helper ----------
   function setMapsLink() {
     if (!$mapsBtn) return;
-
-    // Si viene url directo desde config, lo usamos
     if (config.location?.mapsUrl) {
       $mapsBtn.href = config.location.mapsUrl;
-      return;
     }
-
-    // Sino, armamos búsqueda por query
-    const q = encodeURIComponent(MAPS_QUERY);
-    $mapsBtn.href = `https://www.google.com/maps/search/?api=1&query=${q}`;
-  }
-
-  function buildMapsEmbedUrl() {
-    // Si viene embed directo desde config, lo usamos
-    if (config.location?.mapsEmbed) return config.location.mapsEmbed;
-
-    // Sino, armamos embed por query (NOTA: requiere API Key real para funcionar perfecto,
-    // o usar el embed simple de Google Maps). 
-    // Como fallback genérico, retornamos string vacío si no hay URL configurada.
-    return "";
   }
 
   function initMapsEmbedLazy() {
-    if (!$mapsFrame) return;
-
-    const embedUrl = buildMapsEmbedUrl();
-    if (!embedUrl) {
-        // Si no hay URL de embed, ocultamos el esqueleto para que no quede cargando infinito
-        if ($mapSkeleton) $mapSkeleton.style.display = "none";
-        return; 
+    if (!$mapsFrame || !config.location?.mapsEmbed) {
+      if($mapSkeleton) $mapSkeleton.style.display = 'none';
+      return;
     }
-
     const load = () => {
-      if ($mapsFrame.dataset.loaded === "1") return;
-
-      $mapsFrame.src = embedUrl;
-      $mapsFrame.dataset.loaded = "1";
-
-      $mapsFrame.addEventListener(
-        "load",
-        () => {
-          const wrap = $mapsFrame.closest(".mapWrap");
-          if (wrap) wrap.classList.add("is-loaded");
-          if ($mapSkeleton) $mapSkeleton.style.display = "none";
-        },
-        { once: true }
-      );
+      $mapsFrame.src = config.location.mapsEmbed;
+      $mapsFrame.onload = () => {
+        const wrap = $mapsFrame.closest(".mapWrap");
+        if (wrap) wrap.classList.add("is-loaded");
+      };
     };
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            load();
-            io.disconnect();
-          }
-        }
-      },
-      { threshold: 0.12 }
-    );
-
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { load(); io.disconnect(); }
+    });
     io.observe($mapsFrame);
   }
 
-  // ---------- Search / Normalize ----------
+  // ---------- Search & Logic ----------
   function normalize(s) {
-    return (s || "")
-      .toString()
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
+    return (s || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
 
   function matchesItem(item, query) {
@@ -206,23 +113,19 @@ Gracias por escribir a ${BUSINESS_NAME} ☕✨
   }
 
   function priceText(price) {
-    if (price === null || price === undefined || price === "") return "";
-    if (typeof price === "string") return price;
+    if (!price && price !== 0) return "";
     return `$${fmt.format(price)}`;
   }
 
-  // ---------- Reveal ----------
+  // ---------- Reveal Animation ----------
   function initReveal() {
     const els = document.querySelectorAll(".reveal");
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) e.target.classList.add("is-visible");
-        }
-      },
-      { threshold: 0.12 }
-    );
-    els.forEach((el) => io.observe(el));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting) e.target.classList.add("is-visible");
+      });
+    }, { threshold: 0.1 });
+    els.forEach(el => io.observe(el));
   }
 
   function debounce(fn, wait = 140) {
@@ -233,7 +136,7 @@ Gracias por escribir a ${BUSINESS_NAME} ☕✨
     };
   }
 
-  // ---------- Chips ----------
+  // ---------- Chips Navigation ----------
   function buildChips(sections) {
     if (!$menuChips) return;
     $menuChips.innerHTML = "";
@@ -251,19 +154,24 @@ Gracias por escribir a ${BUSINESS_NAME} ☕✨
       return b;
     };
 
-    for (const s of sections) $menuChips.appendChild(mk(s.id, s.title));
+    // Si la sección activa no existe en los nuevos datos, volver a la primera
+    const exists = sections.some(s => s.id === state.activeSectionId);
+    if (!exists && sections.length > 0 && state.activeSectionId !== "all") {
+      state.activeSectionId = sections[0].id;
+    }
+
+    sections.forEach(s => $menuChips.appendChild(mk(s.id, s.title)));
     $menuChips.appendChild(mk("all", "Todo"));
   }
 
-  // ---------- Render Menu ----------
+  // ---------- Render Menu (Lógica de Stock Corregida) ----------
   function render() {
     if (!$menuGrid) return;
 
     const q = normalize(state.q.trim());
     const sections = state.data?.sections || [];
 
-    const visible =
-      state.activeSectionId === "all"
+    const visible = state.activeSectionId === "all"
         ? sections
         : sections.filter((s) => s.id === state.activeSectionId);
 
@@ -272,65 +180,43 @@ Gracias por escribir a ${BUSINESS_NAME} ☕✨
       return;
     }
 
-    const isScheduleNote = (note) =>
-      typeof note === "string" &&
-      /(\b(11:00|12:00|13:00|14:00|15:00|16:00|17:00|18:00|19:00|20:00)\b)|(\b\d{1,2}:\d{2}\b)|(\bSábados\b|\bDomingos\b|\bFeriados\b)/i.test(
-        note
-      );
-
     const cards = [];
 
     for (const s of visible) {
       for (const it of s.items || []) {
         if (!matchesItem(it, q)) continue;
 
+        // --- LÓGICA DE STOCK ---
+        const hasStock = it.available !== false; 
+        const stockClass = hasStock ? "" : "no-stock";
+        const btnText = hasStock ? "Pedir" : "Sin Stock";
+        
+        // Generar mensaje de WhatsApp
+        const msg = `Hola! Quisiera pedir: ${it.name} (${s.title})`;
+        
+        // CORRECCIÓN: Si no hay stock, el link es '#' y deshabilitamos el click
+        const btnLink = hasStock ? waLink(msg) : "#";
+        const btnAttr = hasStock 
+          ? 'target="_blank" rel="noopener"' 
+          : 'onclick="return false;" style="cursor:not-allowed; opacity:0.6; background:rgba(255,255,255,0.05)"';
+
         const p = priceText(it.price);
-
-        const note = it.note || "";
-        const desc = it.desc || "";
-
-        const schedule = isScheduleNote(note) ? note : "";
-        const extra = !schedule ? note : "";
-
-        const msg = `
-Hola! 
-Quisiera pedir/consultar:
-
-• ${it.name}
-(${s.title})
-
-Gracias 
-`.trim();
-        const askHref = waLink(msg);
-
-        const detailHtml = desc
-          ? `<p>${desc}</p>`
-          : extra
-          ? `<p class="muted">${extra}</p>`
-          : ``;
-
-        const badgeHtml = schedule ? `<span class="badge">${schedule}</span>` : ``;
-
-        const imageHtml = it.image
-          ? `
-            <div class="imageWrap">
-              <img src="${it.image}" alt="${it.name}" class="dishImage">
-            </div>
-          `
-          : ``;
+        const desc = it.desc ? `<p>${it.desc}</p>` : "";
+        const imageHtml = it.image ? `<div class="imageWrap"><img src="${it.image}" alt="${it.name}" class="dishImage"></div>` : "";
+        const badgeHtml = it.note ? `<span class="badge">${it.note}</span>` : "";
 
         cards.push(`
-          <article class="menuItem reveal" data-cat="${s.title}">
+          <article class="menuItem reveal ${stockClass}" data-cat="${s.title}">
             <p class="cat">${s.title}</p>
             <div class="titleRow">
               <h4>${it.name}</h4>
               ${badgeHtml}
             </div>
-            ${detailHtml}
+            ${desc}
             ${imageHtml}
             <div class="bottom">
               <div class="price">${p}</div>
-              <a class="quick" href="${askHref}" target="_blank" rel="noopener">Pedir</a>
+              <a class="quick" href="${btnLink}" ${btnAttr}>${btnText}</a>
             </div>
           </article>
         `);
@@ -339,33 +225,24 @@ Gracias
 
     $menuGrid.innerHTML = cards.length
       ? cards.join("")
-      : `<div class="card"><p class="muted">No hay resultados para tu búsqueda.</p></div>`;
+      : `<div class="card"><p class="muted">No se encontraron productos.</p></div>`;
 
     initReveal();
   }
 
-// ---------- Load Menu (CLOUD) ----------
+  // ---------- Load Menu (Conexión Backend) ----------
   async function loadMenu() {
-    // 1. Intentamos leer de la nube (JSONBin)
     try {
-      // Usamos las credenciales de config.js
-      const { binId, apiKey } = window.SITE_CONFIG.api;
-      
-      const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-        headers: {
-          'X-Master-Key': apiKey
-        }
-      });
+      const url = window.SITE_CONFIG.api.baseUrl;
+      const res = await fetch(url);
 
-      if (!res.ok) throw new Error("Error conectando con la nube");
+      if (!res.ok) throw new Error("Backend offline");
 
-      const json = await res.json();
-      // JSONBin devuelve los datos dentro de una propiedad "record"
-      return json.record; 
+      const data = await res.json();
+      return data;
 
     } catch (e) {
-      console.error("Fallo la nube, intentando local...", e);
-      // Fallback: Si falla internet, carga el local
+      console.warn("Fallo el backend, usando archivo local...", e);
       const res = await fetch("./data/menu.json");
       return await res.json();
     }
@@ -375,8 +252,6 @@ Gracias
   async function init() {
     setGlobalWALinks();
     setMapsLink();
-
-    initReveal();
     initMapsEmbedLazy();
 
     state.loading = true;
@@ -384,12 +259,16 @@ Gracias
 
     state.data = await loadMenu();
 
-    if (!state.data || !Array.isArray(state.data.sections)) {
-      throw new Error("El menú cargó pero no tiene 'sections' como array.");
+    // Asegurar estructura
+    if (!state.data.sections) state.data.sections = [];
+    
+    // Seleccionar primera sección por defecto
+    if (state.data.sections.length > 0) {
+       state.activeSectionId = state.data.sections[0].id;
     }
 
     state.loading = false;
-    buildChips(state.data.sections || []);
+    buildChips(state.data.sections);
 
     if ($menuSearch) {
       $menuSearch.addEventListener(
@@ -406,91 +285,59 @@ Gracias
 
   init().catch((err) => {
     console.error(err);
-    state.loading = false;
-
     if ($menuGrid) {
-      $menuGrid.innerHTML = `
-        <div class="card">
-          <p><strong>Error cargando la carta.</strong></p>
-          <p class="muted" style="margin:0;">${String(err.message || err)}</p>
-          <p class="muted" style="margin:10px 0 0; font-size:12px;">
-            Tip: Abrí el sitio con un servidor local (no con file://).
-          </p>
-        </div>
-      `;
+      $menuGrid.innerHTML = `<div class="card"><p>Error cargando menú (Intenta npm start)</p></div>`;
     }
   });
 
-   // =========================================================
-   // MOBILE NAV
-   // =========================================================
-   (() => {
-    const body = document.body;
-    const toggle = document.querySelector(".nav__toggle");
-    const drawer = document.getElementById("mobileNav");
+  // Mobile Nav
+  const toggle = document.querySelector(".nav__toggle");
+  if(toggle) {
+    toggle.addEventListener("click", () => document.body.classList.toggle("nav-open"));
     const backdrop = document.querySelector(".nav__backdrop");
-  
-    if (!toggle || !drawer || !backdrop) return;
-  
-    const setOpen = (open) => {
-      body.classList.toggle("nav-open", open);
-      toggle.setAttribute("aria-expanded", String(open));
-      toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
-  
-      if (open) {
-        const firstLink = drawer.querySelector("a");
-        firstLink?.focus?.();
-      } else {
-        toggle.focus?.();
-      }
-    };
-  
-    const isOpen = () => body.classList.contains("nav-open");
-  
-    // Toggle
-    toggle.addEventListener("click", (e) => {
-      e.preventDefault();
-      setOpen(!isOpen());
-    });
-  
-    // Backdrop explícito
-    backdrop.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      setOpen(false);
-    });
-  
-    // Cerrar al tocar un link
-    drawer.addEventListener("click", (e) => {
-      const a = e.target.closest("a");
-      if (a && isOpen()) setOpen(false);
-    });
-  
-    // Cerrar con ESC
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && isOpen()) setOpen(false);
-    });
-  
-    // Click outside robusto
-    document.addEventListener(
-      "pointerdown",
-      (e) => {
-        if (!isOpen()) return;
-        const t = e.target;
-        if (t && t.closest && t.closest("[data-nav-close]")) {
-          setOpen(false);
-          return;
-        }
-        if (drawer.contains(t) || toggle.contains(t)) return;
-        setOpen(false);
-      },
-      true 
-    );
-  
-    // Si cambia a desktop, cerrar
-    const mq = window.matchMedia("(min-width: 861px)");
-    mq.addEventListener?.("change", (e) => {
-      if (e.matches) setOpen(false);
-    });
-  })();
+    if(backdrop) backdrop.addEventListener("click", () => document.body.classList.remove("nav-open"));
+  }
+
+  // --- NUEVA FUNCIÓN: Subir Imagen ---
+  window.uploadImage = async (input, secIdx, itemIdx) => {
+    const file = input.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    // Feedback visual inmediato
+    const textInput = document.getElementById(`img-input-${secIdx}-${itemIdx}`);
+    const originalText = textInput.value;
+    textInput.value = "Subiendo...";
+    textInput.disabled = true;
+
+    try {
+      const url = "http://localhost:3000/api/upload"; // URL de tu backend
+      const res = await fetch(url, {
+        method: "POST",
+        body: formData
+      });
+
+      if (!res.ok) throw new Error("Fallo la subida");
+
+      const data = await res.json();
+      
+      // ¡Éxito! Actualizamos el dato y el input
+      updateItem(secIdx, itemIdx, 'image', data.filePath);
+      textInput.value = data.filePath;
+      
+      alert("✅ Imagen subida correctamente");
+
+    } catch (e) {
+      console.error(e);
+      alert("Error al subir imagen.");
+      textInput.value = originalText; // Restaurar si falló
+    } finally {
+      textInput.disabled = false;
+      input.value = ""; // Limpiar input file para poder subir la misma si quiere
+    }
+  };
 
 })();
+

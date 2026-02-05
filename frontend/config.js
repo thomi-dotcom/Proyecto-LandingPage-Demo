@@ -8,7 +8,7 @@ window.SITE_CONFIG = {
   },
 
   whatsapp: {
-    phone: "5491137725761", // demo
+    phone: "549123456789", // demo
     defaultMessage:
       "Hola! Quisiera hacer una consulta / reserva.",
   },
@@ -28,9 +28,8 @@ window.SITE_CONFIG = {
     logo: "frontend/assets/logo.png",
   },
 
-  // Agrega esto al final:
   api: {
-    binId: "69838812d0ea881f40a0e530",
-    apiKey: "$2a$10$VlBFQ5lnvq3KbrCnOQAf0eIazNEQM/x5YPejjfkKHRsjJGZ4/hrfW" 
+    // Apuntamos a tu servidor local
+    baseUrl: "http://localhost:3000/api/menu"
   }
 };
