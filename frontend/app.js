@@ -44,23 +44,31 @@
   };
 
   // =========================================================
-  // ADMIN SHORTCUT: CTRL + A + D
-  // =========================================================
-  (() => {
-    const pressed = new Set();
-    window.addEventListener("keydown", (e) => {
-      const tag = document.activeElement ? document.activeElement.tagName : "";
-      if (tag === "INPUT" || tag === "TEXTAREA") return;
-      
-      pressed.add(e.key);
-      if (pressed.has("Control") && (pressed.has("a") || pressed.has("A")) && (pressed.has("d") || pressed.has("D"))) {
-        e.preventDefault();
-        window.location.href = "./admin.html";
-        pressed.clear();
-      }
-    });
-    window.addEventListener("keyup", (e) => pressed.delete(e.key));
-  })();
+// ADMIN SHORTCUT: CTRL + K
+// =========================================================
+(() => {
+  const pressed = new Set();
+
+  window.addEventListener("keydown", (e) => {
+    // Evitamos que funcione si estamos escribiendo en un input o textarea
+    const tag = document.activeElement ? document.activeElement.tagName : "";
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+
+    pressed.add(e.key.toLowerCase()); // ← normalizamos a minúscula
+
+    // Ctrl + K
+    if (pressed.has("control") && pressed.has("k")) {
+      e.preventDefault();
+      window.location.href = "./admin.html";
+      pressed.clear();
+    }
+  });
+
+  window.addEventListener("keyup", (e) => {
+    pressed.delete(e.key.toLowerCase());
+  });
+
+})();
 
   // ---------- WhatsApp Helper ----------
   function waLink(text) {

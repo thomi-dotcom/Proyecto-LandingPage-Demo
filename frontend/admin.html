@@ -3,506 +3,381 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Panel de Admin | Maison Lúmina</title>
+  <title>Maison Lúmina | Elite Admin</title>
+  
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* Tus variables originales */
-      --bg: #0b0f12;
-      --card: #141a1f;
-      --text: #f6f7f8;
-      --muted: rgba(255, 255, 255, 0.6);
-      --border: rgba(255, 255, 255, 0.1);
-      --toolbar-bg: rgba(20, 26, 31, 0.85);
-      
-      --olive: #3c8c64;
-      --olive-2: #2f6f4e;
-      --danger: #ff5252;
-      --warn: #ffb74d;
-
-      --radius: 18px;
-      --shadow-sm: 0 10px 26px rgba(0,0,0,0.3);
-      --focus: rgba(60, 140, 100, 0.25);
+      /* Palette Elite Dark */
+      --bg: #090b10;
+      --card: #12151c;
+      --card-inner: #1a1f28;
+      --text: #ffffff;
+      --text-dim: #8a99af;
+      --border: rgba(255, 255, 255, 0.07);
+      --olive: #10b981;
+      --accent: #d4af37; /* Dorado metálico */
+      --danger: #ff5e57;
+      --radius-xl: 28px;
+      --radius-lg: 18px;
+      --shadow-premium: 0 20px 40px rgba(0,0,0,0.4);
     }
 
-    /* Clase para Tema Claro */
     [data-theme="light"] {
-      --bg: #fbfaf7;
+      --bg: #f3f5f9;
       --card: #ffffff;
-      --text: #1f1f1d;
-      --muted: rgba(31,31,29,.65);
-      --border: rgba(31,31,29,.10);
-      --toolbar-bg: rgba(251,250,247,.86);
-      --olive: #2e5b3b;
-      --olive-2: #244a31;
-      --danger: #a12020;
-      --warn: #b07a00;
-      --shadow-sm: 0 10px 26px rgba(22,18,12,.07);
+      --card-inner: #f8fafc;
+      --text: #0f172a;
+      --text-dim: #64748b;
+      --border: #e2e8f0;
+      --olive: #059669;
+      --accent: #b8860b;
+      --shadow-premium: 0 10px 40px rgba(0,0,0,0.08);
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    
+    body {
+      margin: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       background: var(--bg);
       color: var(--text);
-      transition: background 0.3s ease, color 0.3s ease;
+      transition: all 0.4s ease;
+      overflow-x: hidden;
     }
 
-    .wrap{
-      max-width: 1000px; /* Un poco más ancho para las tarjetas */
-      margin: 0 auto;
-      padding: 18px 18px 80px; /* Espacio abajo para el botón flotante */
-    }
+    .wrap { padding: 40px; max-width: 1800px; margin: 0 auto; }
 
-    .header{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:14px; flex-wrap:wrap; margin: 6px 0 14px;
-    }
-    h1{ margin:0; font-size: 26px; letter-spacing:.01em; }
-
-    /* Toolbar */
-    .toolbar{
-      position: sticky; top: 10px; z-index: 100;
-      background: var(--toolbar-bg); backdrop-filter: blur(10px);
-      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
-      border-radius: var(--radius); padding: 12px; margin: 10px 0 20px;
-      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
-    }
-
-    /* Inputs Genéricos */
-    input[type="text"], input[type="number"], textarea {
-      background: rgba(255,255,255,0.05);
+    /* --- Toolbar Superior --- */
+    .toolbar {
+      position: sticky; top: 20px; z-index: 1000;
+      background: rgba(var(--card), 0.7);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 8px;
-      padding: 8px 10px;
-      width: 100%;
-      font-family: inherit;
-      font-size: 14px;
+      padding: 18px 30px; border-radius: var(--radius-lg);
+      display: flex; gap: 20px; align-items: center;
+      margin-bottom: 50px; box-shadow: var(--shadow-premium);
     }
-    [data-theme="light"] input, [data-theme="light"] textarea { background: #f0f0f0; border-color:#ccc; color: #000; }
-    
-    input:focus, textarea:focus { outline: none; border-color: var(--olive); }
+    [data-theme="light"] .toolbar { background: rgba(255, 255, 255, 0.85); }
 
-    /* Botones */
-    .btn{
-      padding:10px 14px; border-radius:12px; border:1px solid var(--border);
-      background: rgba(255,255,255,0.05); color: var(--text);
-      cursor:pointer; font-weight:700; font-size:13px; transition: all .15s ease;
+    .search-box { 
+      flex: 1; display: flex; gap: 14px; background: rgba(0,0,0,0.25); 
+      padding: 12px 20px; border-radius: 14px; border: 1px solid var(--border);
+      transition: 0.3s;
     }
-    [data-theme="light"] .btn { background: #fff; border-color:#ddd; color:#333; }
-    .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-    
-    .btn-primary{ background: var(--olive); color:#fff; border:none; }
-    .btn-danger { color: var(--danger); border-color: var(--danger); background: transparent; }
+    .search-box:focus-within { border-color: var(--accent); background: rgba(0,0,0,0.4); }
+    .search-box input { background: transparent; border: none; color: var(--text); width: 100%; outline: none; font-size: 15px; font-weight: 500; }
 
-    /* --- NUEVO: Estilo Acordeón y Tarjetas --- */
+    /* --- Grid System --- */
+    #menuContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 35px; align-items: start;
+    }
+
     .section-block {
-      margin-bottom: 20px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--card);
-      overflow: hidden;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-xl); display: flex; flex-direction: column;
+      max-height: 85vh; box-shadow: var(--shadow-premium);
+      position: relative; overflow: hidden;
+      animation: fadeInUp 0.5s ease backwards;
     }
-    
+    .section-block::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
     .section-header {
-      padding: 15px;
-      background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      display: flex; justify-content: space-between; align-items: center;
-      font-weight: 700; font-size: 15px;
+      padding: 28px 24px; display: flex; justify-content: space-between; align-items: center;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
     }
-    .section-header:hover { background: rgba(255,255,255,0.06); }
+    .section-title-input {
+      font-size: 20px; font-weight: 800; border: none; background: transparent; 
+      color: var(--text); outline: none; width: 80%; letter-spacing: -0.5px;
+    }
 
-    .items-container { display: none; padding: 15px; display: grid; gap: 15px; }
-    .section-block.collapsed .items-container { display: none; }
-    .section-block.collapsed .section-header { border-bottom: none; }
+    .items-container { padding: 0 24px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; }
 
-    /* Tarjeta de Producto */
+    /* --- Item Cards Elite --- */
     .item-card {
-      display: grid; 
-      grid-template-columns: 60px 1fr 40px; /* Switch | Inputs | Delete */
-      gap: 15px;
-      background: rgba(0,0,0,0.15);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 15px;
-      align-items: start;
+      background: var(--card-inner); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 24px;
+      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    [data-theme="light"] .item-card { background: #f4f4f4; border-color: #ddd; }
+    .item-card:hover { border-color: rgba(212, 175, 55, 0.4); transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .item-card.is-out { opacity: 0.4; filter: grayscale(1); border-style: dotted; }
 
-    .item-main { display: flex; flex-direction: column; gap: 10px; }
-    .row-inputs { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
-    
-    label { font-size: 10px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+    .input-group { margin-bottom: 18px; }
+    label { font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; display: block; }
 
-    /* Switch de Stock */
-    .stock-switch {
-      display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer;
+    input, textarea {
+      width: 100%; padding: 12px 16px; background: rgba(0,0,0,0.2);
+      border: 1px solid var(--border); border-radius: 12px;
+      color: var(--text); font-family: inherit; font-size: 14px;
+      transition: 0.2s;
     }
-    .switch-track {
-      width: 36px; height: 20px; background: #555; border-radius: 20px; position: relative; transition: 0.3s;
-    }
-    .switch-thumb {
-      width: 14px; height: 14px; background: white; border-radius: 50%;
-      position: absolute; top: 3px; left: 3px; transition: 0.3s;
-    }
-    /* Activo */
-    .stock-active .switch-track { background: var(--olive); }
-    .stock-active .switch-thumb { transform: translateX(16px); }
-    .stock-label { font-size: 9px; font-weight: bold; color: var(--muted); text-align: center;}
+    [data-theme="light"] input, [data-theme="light"] textarea { background: #fff; }
+    input:focus, textarea:focus { border-color: var(--accent); outline: none; background: rgba(0,0,0,0.35); }
 
-    /* Barra Flotante de Guardado */
+    /* --- Buttons --- */
+    .btn {
+      padding: 12px 24px; border-radius: 14px; border: 1px solid var(--border);
+      background: var(--card-inner); color: var(--text); cursor: pointer;
+      font-weight: 700; font-size: 13px; transition: 0.3s;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn:hover { background: var(--text); color: var(--bg); transform: translateY(-2px); }
+    .btn-primary { background: var(--accent); color: #000; border: none; }
+    .btn-primary:hover { filter: brightness(1.2); box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+
+    /* --- Stock Control --- */
+    .stock-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 15px; border-top: 1px solid var(--border); }
+    .switch-pill {
+      display: flex; align-items: center; gap: 10px; padding: 8px 18px;
+      border-radius: 100px; background: rgba(0,0,0,0.3); cursor: pointer; 
+      font-size: 11px; font-weight: 800; transition: 0.3s; border: 1px solid transparent;
+    }
+    .stock-active { background: rgba(16, 185, 129, 0.1); color: var(--olive); border-color: rgba(16, 185, 129, 0.3); }
+
+    /* --- Notification Bar --- */
     .unsaved-bar {
-      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
-      background: var(--olive); color: white;
-      padding: 12px 24px; border-radius: 50px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-      display: flex; gap: 15px; align-items: center; z-index: 999;
-      opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%) translateY(150px);
+      background: var(--text); color: var(--bg);
+      padding: 18px 45px; border-radius: 100px;
+      display: flex; align-items: center; gap: 40px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+      z-index: 10000; transition: 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6);
     }
-    .unsaved-bar.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .unsaved-bar.visible { transform: translateX(-50%) translateY(0); }
+    .pulse { animation: pulseAnim 2s infinite; }
 
-    /* PIN Overlay (Igual que antes) */
-    .pinOverlay{ position: fixed; inset: 0; background: rgba(7,10,13,0.98); backdrop-filter: blur(5px); display:flex; align-items:center; justify-content:center; z-index: 9999; }
-    .pinCard{ width: 300px; background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 30px; text-align: center; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulseAnim { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-    @media (max-width: 600px) {
-      .item-card { grid-template-columns: 1fr; position: relative;}
-      .stock-switch { flex-direction: row; justify-content: space-between; margin-bottom: 10px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; }
-      .btn-delete-mobile { position: absolute; top: 10px; right: 10px; }
-      .row-inputs { grid-template-columns: 1fr 1fr; }
-    }
+    /* Login / PIN Custom */
+    .pinOverlay { position: fixed; inset: 0; background: var(--bg); z-index: 99999; display: flex; align-items: center; justify-content: center; }
   </style>
 </head>
-
 <body>
+
   <div class="pinOverlay" id="pinOverlay">
-    <div class="pinCard">
-      <h2>Acceso Admin</h2>
-      <input class="btn" style="width:100%; margin:10px 0; text-align:center; font-size:18px" id="pinInput" type="password" placeholder="PIN" />
-      <button class="btn btn-primary" id="pinBtn" style="width:100%">Entrar</button>
-      <div id="pinError" style="color:var(--danger); margin-top:10px; display:none">Incorrecto</div>
+    <div style="text-align: center; width: 380px; padding: 50px; background: var(--card); border-radius: 40px; border: 1px solid var(--border); box-shadow: var(--shadow-premium);">
+      <h1 style="margin-bottom: 10px; font-weight: 800; letter-spacing: -1.5px; color: var(--accent);">MAISON LÚMINA</h1>
+      <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 40px; font-weight: 500;">SISTEMA DE GESTIÓN CENTRAL</p>
+      <input type="password" id="pinInput" maxlength="4" placeholder="••••" style="font-size: 40px; text-align: center; letter-spacing: 15px; margin-bottom: 35px; border: none; background: transparent; border-bottom: 2px solid var(--border); border-radius: 0; color: var(--text); width: 80%;">
+      <button class="btn btn-primary" style="width:100%; padding: 20px; font-size: 15px; text-transform: uppercase; letter-spacing: 2px;" id="pinBtn">Acceder al Studio</button>
     </div>
   </div>
 
   <div class="wrap">
-    <div class="header">
+    <div class="header" style="display:flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px;">
       <div>
-        <h1>Panel Admin</h1>
-        <div class="muted">Gestión total del menú.</div>
+        <h2 style="margin:0; font-weight: 800; font-size: 32px; letter-spacing: -1px;">Editor de Menú</h2>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:5px;">
+          <span style="width:8px; height:8px; background:var(--olive); border-radius:50%;"></span>
+          <span style="color: var(--text-dim); font-size: 13px; font-weight: 600;">Servidor Sincronizado</span>
+        </div>
       </div>
-      <div style="display:flex; gap:10px;">
-        <button class="btn" onclick="window.location.href='./index.html'">← Volver</button>
-        <button class="btn" id="themeToggle">🌓 Tema</button>
+      <div style="display:flex; gap:15px;">
+        <button class="btn" id="themeToggle" style="border-radius: 50%; width:50px; height:50px; padding:0;">🌓</button>
+        <button class="btn" onclick="window.location.reload()" style="border-radius: 50%; width:50px; height:50px; padding:0;">🔄</button>
       </div>
     </div>
 
     <div class="toolbar">
-      <div style="flex:1; display:flex; gap:10px; align-items:center;">
-        <span>🔎</span>
-        <input id="searchInput" type="text" placeholder="Buscar plato, ingrediente..." style="border:none; background:transparent; font-size:16px; padding:0;">
+      <div class="search-box">
+        <span>🔍</span>
+        <input id="searchInput" type="text" placeholder="Filtrar por cualquier término...">
       </div>
-      <button class="btn" onclick="expandAll(false)">Contraer Todo</button>
+      <button class="btn btn-primary" onclick="addNewSection()">+ CREAR CATEGORÍA</button>
     </div>
 
     <div id="menuContainer"></div>
   </div>
 
   <div class="unsaved-bar" id="unsavedBar">
-    <span style="font-weight:600">⚠️ Cambios sin guardar</span>
-    <button class="btn" style="background:white; color:var(--olive); font-weight:800" id="btnSave">GUARDAR AHORA</button>
+    <div style="display:flex; align-items:center; gap:15px;" class="pulse">
+      <div style="width:12px; height:12px; background:var(--accent); border-radius:50%;"></div>
+      <b style="font-size: 16px; letter-spacing: 0.5px;">HAY CAMBIOS SIN PUBLICAR</b>
+    </div>
+    <button class="btn btn-primary" id="btnSave" style="background: var(--bg); color: var(--text); padding: 12px 30px;">PUBLICAR CAMBIOS</button>
   </div>
 
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script src="config.js"></script>
-
+  
   <script>
-    // --- 1. CONFIG Y VARIABLES ---
     const ADMIN_PIN = "1433"; 
     let menuData = null;
     let hasChanges = false;
-    
-    // --- 2. PIN Y TEMA ---
-    const pinOverlay = document.getElementById("pinOverlay");
-    const pinInput = document.getElementById("pinInput");
-    
-    document.getElementById("pinBtn").onclick = checkPin;
-    pinInput.onkeydown = (e) => { if(e.key === 'Enter') checkPin() };
 
-    function checkPin(){
-      if (pinInput.value === ADMIN_PIN) {
-        pinOverlay.style.display = "none";
-      } else {
-        document.getElementById("pinError").style.display = "block";
-        pinInput.value = "";
-      }
-    }
-
-    const themeBtn = document.getElementById('themeToggle');
-    themeBtn.onclick = () => {
-      const isLight = document.body.getAttribute('data-theme') === 'light';
-      document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    const notify = (text, type = "success") => {
+      Toastify({
+        text: text, duration: 3000, gravity: "top", position: "center",
+        style: { 
+          background: type === "success" ? "rgba(16, 185, 129, 0.95)" : "rgba(255, 94, 87, 0.95)", 
+          backdropFilter: "blur(10px)", borderRadius: "16px", fontWeight: "700",
+          boxShadow: "0 15px 30px rgba(0,0,0,0.3)", padding: "12px 24px"
+        }
+      }).showToast();
     };
 
-    // --- 3. LOGICA PRINCIPAL ---
+    document.getElementById("pinBtn").onclick = () => {
+      if(document.getElementById("pinInput").value === ADMIN_PIN) {
+        document.getElementById("pinOverlay").style.display = "none";
+        notify("Identidad Verificada");
+      } else { notify("PIN No Válido", "error"); }
+    };
+
+    document.getElementById('themeToggle').onclick = () => {
+      const current = document.body.getAttribute('data-theme');
+      document.body.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+    };
+
     async function init() {
       try {
-        const url = window.SITE_CONFIG.api.baseUrl;
-        const res = await fetch(url);
-        if(!res.ok) throw new Error("Error fetching");
+        const res = await fetch(window.SITE_CONFIG.api.baseUrl);
         menuData = await res.json();
-        
-        // Parche de seguridad por si es un JSON viejo
-        if (!menuData.sections) menuData.sections = [];
-        
         render();
-      } catch (e) {
-        alert("Error cargando datos. Asegurate que el servidor backend esté corriendo (npm start).");
-        console.error(e);
-      }
+      } catch (e) { notify("Error al cargar base de datos", "error"); }
     }
 
-    // Marca que hubo cambios y muestra el botón flotante
     function markChanged() {
       hasChanges = true;
       document.getElementById('unsavedBar').classList.add('visible');
-      window.onbeforeunload = () => "Tienes cambios sin guardar";
     }
 
-    // Renderiza todo el menú (Acordeones + Tarjetas)
     function render() {
       const container = document.getElementById('menuContainer');
-      container.innerHTML = '';
       const term = document.getElementById('searchInput').value.toLowerCase();
+      container.innerHTML = '';
 
       menuData.sections.forEach((section, secIdx) => {
-        // Filtramos items para la búsqueda
         const filteredItems = section.items.filter(i => 
           i.name.toLowerCase().includes(term) || (i.desc && i.desc.toLowerCase().includes(term))
         );
 
-        if (term && filteredItems.length === 0) return; // Si busco y no hay nada aquí, oculto sección
-
-        const itemsToShow = term ? filteredItems : section.items;
-
-        // Crear contenedor de sección
         const secDiv = document.createElement('div');
-        secDiv.className = `section-block ${term ? '' : 'collapsed'}`; // Expandir si busco
-        
+        secDiv.className = 'section-block';
         secDiv.innerHTML = `
-          <div class="section-header" onclick="toggleSection(this)">
-            <span>${section.title} <span style="font-weight:400; opacity:0.5; font-size:12px">(${itemsToShow.length})</span></span>
-            <span style="opacity:0.5">▼</span>
+          <div class="section-header">
+            <input type="text" class="section-title-input" value="${section.title}" oninput="menuData.sections[${secIdx}].title=this.value; markChanged();">
+            <button class="btn btn-danger" style="padding:8px 12px; border:none; background:rgba(255,94,87,0.15)" onclick="deleteSection(${secIdx})">🗑️</button>
           </div>
           <div class="items-container">
-            </div>
-          <div style="padding:10px; background:rgba(0,0,0,0.1); text-align:center">
-             <button class="btn" style="width:100%; border-style:dashed; opacity:0.7" onclick="addItem(${secIdx})">+ Agregar Plato a ${section.title}</button>
+            ${filteredItems.map((item, i) => {
+              const realIdx = section.items.indexOf(item);
+              const isAvail = item.available !== false;
+              return `
+                <div class="item-card ${!isAvail ? 'is-out' : ''}">
+                  <div class="input-group">
+                    <label>Título del Plato</label>
+                    <input type="text" value="${item.name}" oninput="updateItem(${secIdx}, ${realIdx}, 'name', this.value)">
+                  </div>
+                  <div class="input-group">
+                    <label>Precio Unitario</label>
+                    <input type="number" value="${item.price}" oninput="updateItem(${secIdx}, ${realIdx}, 'price', Number(this.value))">
+                  </div>
+                  <div class="input-group">
+                    <label>Descripción & Alérgenos</label>
+                    <textarea rows="2" oninput="updateItem(${secIdx}, ${realIdx}, 'desc', this.value)">${item.desc || ''}</textarea>
+                  </div>
+                  <div class="input-group">
+                    <label>Enlace de Imagen / Subida</label>
+                    <div style="display:flex; gap:10px;">
+                      <input type="text" id="img-${secIdx}-${realIdx}" value="${item.image || ''}" oninput="updateItem(${secIdx}, ${realIdx}, 'image', this.value)" style="flex:1">
+                      <label class="btn" style="min-width:50px;">
+                        📤 <input type="file" hidden onchange="uploadFile(this, ${secIdx}, ${realIdx})">
+                      </label>
+                    </div>
+                  </div>
+                  <div class="stock-row">
+                    <div class="switch-pill ${isAvail ? 'stock-active' : ''}" onclick="toggleStock(${secIdx}, ${realIdx})">
+                      ${isAvail ? '● ACTIVO EN MENÚ' : '○ FUERA DE STOCK'}
+                    </div>
+                    <button class="btn btn-danger" style="padding:8px 12px; border:none; background:transparent;" onclick="deleteItem(${secIdx}, ${realIdx})">✕ Eliminar</button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+            <button class="btn" style="width:100%; border: 2px dashed var(--border); background:transparent; margin-top:15px;" onclick="addItem(${secIdx})">+ INSERTAR NUEVO PLATO</button>
           </div>
         `;
-
-        const itemsCont = secDiv.querySelector('.items-container');
-
-        itemsToShow.forEach((item, itemIdx) => {
-          // Importante: encontrar el índice real en el array original para no romper al editar filtrado
-          const realIdx = section.items.indexOf(item);
-          const isAvailable = item.available !== false; // Default true
-
-          const card = document.createElement('div');
-          card.className = 'item-card';
-          card.innerHTML = `
-            <div class="stock-switch ${isAvailable ? 'stock-active' : ''}" onclick="toggleStock(${secIdx}, ${realIdx})" title="Click para cambiar estado">
-              <div class="switch-track"><div class="switch-thumb"></div></div>
-              <div class="stock-label">${isAvailable ? 'STOCK' : 'AGOTADO'}</div>
-            </div>
-
-            <div class="item-main">
-              <div class="row-inputs">
-                <div>
-                  <label>Nombre del Producto</label>
-                  <input type="text" value="${item.name}" oninput="updateItem(${secIdx}, ${realIdx}, 'name', this.value)">
-                </div>
-                <div>
-                  <label>Precio ($)</label>
-                  <input type="number" value="${item.price}" oninput="updateItem(${secIdx}, ${realIdx}, 'price', Number(this.value))">
-                </div>
-              </div>
-              
-              <div>
-                <label>Descripción / Ingredientes</label>
-                <textarea rows="2" oninput="updateItem(${secIdx}, ${realIdx}, 'desc', this.value)">${item.desc || ''}</textarea>
-              </div>
-
-              <div>
-  <label>Imagen (URL o Subir)</label>
-  <div style="display:flex; gap:8px;">
-    <input type="text" value="${item.image || ''}" 
-           placeholder="./assets/foto.jpg" 
-           id="img-input-${secIdx}-${realIdx}"
-           oninput="updateItem(${secIdx}, ${realIdx}, 'image', this.value)">
-    
-    <label class="btn" style="padding:8px 12px; cursor:pointer;" title="Subir desde PC">
-      📤
-      <input type="file" hidden accept="image/*" 
-             onchange="uploadImage(this, ${secIdx}, ${realIdx})">
-    </label>
-  </div>
-</div>
-
-            <div style="text-align:right">
-              <button class="btn btn-danger btn-delete-mobile" onclick="deleteItem(${secIdx}, ${realIdx})" title="Eliminar plato">✕</button>
-            </div>
-          `;
-          itemsCont.appendChild(card);
-        });
-
         container.appendChild(secDiv);
       });
     }
 
-    // --- 4. FUNCIONES DE EDICIÓN ---
-    
-    window.toggleSection = (header) => {
-      header.parentElement.classList.toggle('collapsed');
+    window.updateItem = (s, i, f, v) => { menuData.sections[s].items[i][f] = v; markChanged(); };
+    window.toggleStock = (s, i) => {
+      menuData.sections[s].items[i].available = (menuData.sections[s].items[i].available === false);
+      markChanged(); render();
+      notify("Disponibilidad actualizada");
+    };
+    window.addItem = (s) => {
+      menuData.sections[s].items.push({ name: "Plato de Ejemplo", price: 0, desc: "", available: true, image: "" });
+      markChanged(); render();
+      notify("Nuevo ítem añadido a la lista");
+    };
+    window.deleteItem = (s, i) => {
+      menuData.sections[s].items.splice(i, 1);
+      markChanged(); render();
+      notify("Plato eliminado con éxito", "error");
+    };
+    window.deleteSection = (s) => {
+      if(confirm("¿Estás seguro de que quieres eliminar toda esta categoría?")) {
+        menuData.sections.splice(s, 1);
+        markChanged(); render();
+        notify("Categoría removida", "error");
+      }
+    };
+    window.addNewSection = () => {
+      menuData.sections.unshift({ title: "NUEVA CATEGORÍA", items: [] });
+      markChanged(); render();
+      notify("Categoría creada satisfactoriamente");
     };
 
-    window.expandAll = (expand) => {
-      document.querySelectorAll('.section-block').forEach(el => 
-        expand ? el.classList.remove('collapsed') : el.classList.add('collapsed')
-      );
+    window.uploadFile = async (input, s, i) => {
+      if(!input.files[0]) return;
+      const formData = new FormData();
+      formData.append('image', input.files[0]);
+      const statusInput = document.getElementById(`img-${s}-${i}`);
+      statusInput.value = "PROCESANDO...";
+      notify("Subiendo archivo al servidor...");
+
+      try {
+        const res = await fetch("http://localhost:3000/api/upload", { method: "POST", body: formData });
+        const data = await res.json();
+        updateItem(s, i, 'image', data.filePath);
+        statusInput.value = data.filePath;
+        render();
+        notify("Imagen procesada y guardada");
+      } catch (e) { 
+        notify("Fallo en la carga del archivo", "error");
+        statusInput.value = "";
+      }
     };
 
-    window.toggleStock = (secIdx, itemIdx) => {
-      const item = menuData.sections[secIdx].items[itemIdx];
-      item.available = item.available === false ? true : false;
-      markChanged();
-      render(); // Re-render para actualizar color visual
-    };
-
-    window.updateItem = (secIdx, itemIdx, field, val) => {
-      menuData.sections[secIdx].items[itemIdx][field] = val;
-      markChanged();
-    };
-
-    window.addItem = (secIdx) => {
-      menuData.sections[secIdx].items.push({
-        name: "Nuevo Producto",
-        price: 0,
-        desc: "",
-        available: true
-      });
-      markChanged();
-      render();
-      // Abrir la sección automáticamente
-      const sections = document.querySelectorAll('.section-block');
-      if(sections[secIdx]) sections[secIdx].classList.remove('collapsed');
-    };
-
-    window.deleteItem = (secIdx, itemIdx) => {
-      if(!confirm("¿Borrar este producto permanentemente?")) return;
-      menuData.sections[secIdx].items.splice(itemIdx, 1);
-      markChanged();
-      render();
-    };
-
-    document.getElementById('searchInput').addEventListener('input', render);
-
-    // --- 5. GUARDAR ---
+    document.getElementById('searchInput').oninput = render;
     document.getElementById('btnSave').onclick = async () => {
       const btn = document.getElementById('btnSave');
+      btn.disabled = true; btn.textContent = "SINCRONIZANDO...";
       try {
-        btn.textContent = "GUARDANDO...";
-        btn.disabled = true;
-
-        const url = window.SITE_CONFIG.api.baseUrl;
-        
-        const res = await fetch(url, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
+        const res = await fetch(window.SITE_CONFIG.api.baseUrl, {
+          method: "PUT", headers: { "Content-Type": "application/json" },
           body: JSON.stringify(menuData)
         });
-
-        if (!res.ok) throw new Error("Error en servidor");
-
-        // Éxito
-        hasChanges = false;
-        window.onbeforeunload = null;
-        document.getElementById('unsavedBar').classList.remove('visible');
-        alert("¡Menú actualizado correctamente! ☁️");
-
-      } catch (e) {
-        alert("Error al guardar: " + e.message);
-      } finally {
-        btn.textContent = "GUARDAR AHORA";
-        btn.disabled = false;
-      }
+        if(res.ok) {
+          hasChanges = false;
+          document.getElementById('unsavedBar').classList.remove('visible');
+          notify("¡Publicación Global Exitosa!");
+        }
+      } catch (e) { notify("Error de sincronización con API", "error"); }
+      btn.disabled = false; btn.textContent = "PUBLICAR CAMBIOS";
     };
 
-    // --- 6. SUBIR IMAGEN (Te faltaba esto) ---
-    window.uploadImage = async (inputElement, secIdx, itemIdx) => {
-      console.log("Intentando subir imagen...");
-      
-      if (!inputElement.files || !inputElement.files[0]) return;
-      const file = inputElement.files[0];
-
-      const formData = new FormData();
-      formData.append('image', file);
-
-      // Buscamos el input de texto para mostrar feedback
-      const textInputId = `img-input-${secIdx}-${itemIdx}`;
-      const textInput = document.getElementById(textInputId);
-      
-      if(!textInput) {
-          console.error("No encuentro el campo de texto con ID:", textInputId);
-          return;
-      }
-
-      // Feedback visual
-      const originalValue = textInput.value;
-      textInput.value = "Subiendo...";
-      textInput.disabled = true;
-
-      try {
-        // Asegurate que el puerto 3000 sea el correcto
-        const res = await fetch("http://localhost:3000/api/upload", {
-          method: "POST",
-          body: formData
-        });
-
-        if (!res.ok) throw new Error("Error en el servidor al subir");
-
-        const data = await res.json();
-        
-        // ¡Éxito!
-        // 1. Actualizamos el dato en memoria
-        updateItem(secIdx, itemIdx, 'image', data.filePath);
-        // 2. Actualizamos el input visual
-        textInput.value = data.filePath;
-        
-        // Opcional: Mostrar un tick verde temporal
-        inputElement.parentElement.innerHTML = "✅"; 
-        setTimeout(() => { 
-            // Restaurar el botón de subida (opcional, requiere render completo o lógica compleja, 
-            // pero con el render() al guardar se arregla solo)
-             render(); 
-        }, 1000);
-
-      } catch (e) {
-        console.error(e);
-        alert("Error al subir: " + e.message + "\n(Revisá que el backend esté corriendo)");
-        textInput.value = originalValue; 
-      } finally {
-        textInput.disabled = false;
-        inputElement.value = ""; // Limpiar para permitir subir otra
-      }
-    };
-
-    // Inicio
     init();
-
   </script>
 </body>
-</html>3
+</html>
